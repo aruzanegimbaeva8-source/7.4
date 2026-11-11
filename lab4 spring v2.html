@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>№4 зертханалық жұмыс — Серпімді деформацияларды зерттеу</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef2fb;--card:#fff;--ink:#14213d;--muted:#5a6785;--blue:#3157e0;--on:#fff;--teal:#0e9f8e;--amber:#f5a524;--line:#d9e1f2;--soft:#eef3ff;--soft2:#f6f8fe;--warn-bg:#fff5e6;--warn-line:#fbd38d;--shadow:0 10px 30px #1f2f6a14;--r:22px;--head1:#142a66;--head2:#3157e0}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 Nunito,system-ui,-apple-system,"Segoe UI",sans-serif}
+.container{width:min(1180px,92%);margin:auto}
+[data-tip]{cursor:help}
+header{position:relative;overflow:hidden;color:#fff;background:radial-gradient(900px 400px at 85% -10%,#6f8cff55,transparent 60%),linear-gradient(135deg,var(--head1),var(--head2));padding:64px 0 40px}
+header .coil{position:absolute;right:3%;bottom:-6px;width:230px;opacity:.28;pointer-events:none}
+.tag{display:inline-block;background:#ffffff26;border:1px solid #ffffff3d;border-radius:999px;padding:5px 14px;font-size:13px;font-weight:700;margin-bottom:12px}
+h1{font-size:clamp(28px,4.2vw,46px);line-height:1.12;margin:0 0 6px;font-weight:900;letter-spacing:-.01em;text-wrap:balance}
+.rubric{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.rubric span{background:#ffffff1f;border:1px solid #ffffff33;padding:4px 11px;border-radius:999px;font-size:12.5px;font-weight:700}
+.language-tools{position:absolute;right:4%;top:14px;display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end;z-index:2}
+.language-tools select,.language-tools button{padding:8px 10px;border:1px solid #cbd5e1;border-radius:10px;background:#fff;color:#14213d;font:inherit;font-size:14px;font-weight:700}
+nav{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--card) 92%,transparent);border-bottom:1px solid var(--line);backdrop-filter:blur(8px)}
+nav .container{display:flex;gap:4px;overflow:auto;padding:8px 0}
+nav a{white-space:nowrap;text-decoration:none;color:var(--muted);padding:7px 11px;border-radius:999px;font-size:13px;font-weight:800;display:flex;gap:6px;align-items:center}
+nav a i{font-style:normal;display:grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--soft);color:var(--blue);font-size:11px}
+nav a:hover{background:var(--soft);color:var(--blue)}
+.toolbar{display:flex;gap:9px;flex-wrap:wrap;align-items:center;padding:16px 0}
+button{border:0;border-radius:12px;padding:10px 16px;background:var(--blue);color:var(--on);font:inherit;font-weight:800;font-size:15px;cursor:pointer;transition:transform .12s,filter .12s}
+button:hover{filter:brightness(1.07)}button:active{transform:translateY(1px)}button:disabled{opacity:.5;cursor:not-allowed}
+.toolbar .pdf{background:var(--teal)}button.secondary{background:var(--soft);color:var(--ink);border:1px solid var(--line)}
+main{padding:4px 0 70px}
+section{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:28px;margin-bottom:22px;scroll-margin-top:64px}
+h2{font-size:25px;line-height:1.25;margin:0 0 16px;display:flex;gap:13px;align-items:center;font-weight:900;text-wrap:balance}
+h2 .num{flex:none;display:grid;place-items:center;width:40px;height:40px;border-radius:13px;background:linear-gradient(135deg,var(--blue),var(--teal));color:#fff;font-size:19px}
+h3{font-size:18px;margin:18px 0 8px;font-weight:800}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.card{background:var(--soft2);border:1px solid var(--line);border-radius:16px;padding:16px}
+.formula{font-family:"Cambria Math",Georgia,serif;font-size:21px;background:var(--soft);border-left:5px solid var(--blue);padding:12px 16px;border-radius:12px;margin:10px 0;overflow-x:auto}
+.highlight{background:var(--soft);border:1px solid color-mix(in srgb,var(--blue) 30%,var(--line));border-radius:14px;padding:14px 16px}
+.warning{background:var(--warn-bg);border:1px solid var(--warn-line);border-radius:14px;padding:14px 16px}
+.qbox{display:grid;gap:12px;margin-bottom:12px}.qbox p{margin:0;font-size:19px;font-weight:700;background:var(--soft);border-radius:16px;padding:16px 18px;border:1px solid var(--line)}
+.small{font-size:13.5px;color:var(--muted)}.muted{color:var(--muted)}
+table{border-collapse:collapse;width:100%;margin:12px 0;font-size:13.5px}
+th,td{border:1px solid var(--line);padding:8px;text-align:center}th{background:var(--soft);font-weight:800}
+td input{width:100%;min-width:62px;padding:7px;border:1px solid var(--line);border-radius:8px;text-align:center;font:inherit;background:var(--card);color:var(--ink)}
+.scroll{overflow:auto}
+ol,ul{padding-left:22px}li{margin:4px 0}
+.control{border:1px solid var(--line);border-radius:16px;padding:14px;background:var(--card)}.control label{display:flex;justify-content:space-between;gap:8px;font-weight:800}
+.control output{color:var(--blue);font-weight:900}.control input[type=range]{width:100%;accent-color:var(--blue);margin:12px 0}
+.controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:14px 0}
+.metric{border:1px solid var(--line);border-radius:14px;background:var(--soft2);padding:12px}.metric small{display:block;color:var(--muted);font-weight:700}.metric strong{font-size:22px;font-weight:900}
+.simgrid{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
+.spring-stage{background:linear-gradient(#f7fbff,#fff);border:2px dashed var(--line);border-radius:18px;padding:10px;transition:border-color .2s}
+.spring-stage.dragover{border-color:var(--blue);background:#eaf0ff}.spring-stage svg{width:100%;height:auto;display:block;max-height:560px}
+.spring-stage.shake{animation:shake .35s}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.graph-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin:14px 0}
+.graph-card canvas{display:block;width:100%;height:330px;border:1px solid var(--line);border-radius:12px;background:#fff}
+.legend{display:flex;gap:15px;flex-wrap:wrap;font-size:13px;font-weight:700;margin-top:8px}.legend span:before{content:"";display:inline-block;width:19px;height:4px;vertical-align:middle;margin-right:6px;background:var(--c);border-radius:2px}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.studentgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}.studentgrid label{font-weight:800}
+.studentgrid input,textarea{display:block;width:100%;padding:11px;border:1px solid var(--line);border-radius:12px;font:inherit;margin-top:5px;background:var(--card);color:var(--ink)}
+textarea{min-height:115px}
+.status{font-weight:800;color:var(--teal);min-height:24px}
+/* equipment chips */
+.eqlist{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.eqlist li{display:flex;align-items:center;gap:10px;background:var(--soft2);border:1px solid var(--line);border-radius:14px;padding:8px 12px;font-weight:800;margin:0;transition:transform .12s,border-color .12s}
+.eqlist li[data-tip]:hover,.eqlist li[data-tip]:focus{transform:translateY(-2px);border-color:var(--blue);outline:none}
+.eqicon{width:46px;height:46px;flex:none;background:var(--card);border-radius:12px;border:1px solid var(--line)}.eqicon svg{width:100%;height:100%;display:block}
+.hint{display:flex;gap:9px;align-items:center;margin:10px 0}
+/* tooltip */
+#tip{position:fixed;z-index:200;width:268px;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:18px;box-shadow:0 18px 50px #0f1c4a40;padding:14px;pointer-events:none;opacity:0;transform:translateY(6px);transition:opacity .14s,transform .14s}
+#tip.on{opacity:1;transform:none}
+#tip .art{height:128px;border-radius:12px;background:linear-gradient(#f4f7ff,#e6edff);display:grid;place-items:center;margin-bottom:10px}#tip .art svg{height:116px;width:116px}
+#tip b{display:block;font-size:17px;font-weight:900}#tip p{margin:4px 0 0;font-size:14px;line-height:1.45;color:var(--muted)}
+/* builder */
+.builder{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:center;margin:6px 0 12px}
+.tray{display:flex;gap:8px;flex-wrap:wrap}
+.part{display:flex;flex-direction:column;align-items:center;gap:2px;width:92px;padding:8px 6px;border-radius:14px;background:var(--card);color:var(--ink);border:2px solid var(--line);font-size:12.5px;font-weight:800;cursor:grab}
+.part:hover{border-color:var(--blue);filter:none}.part .eqicon{width:56px;height:56px;border:0;background:var(--soft2)}
+.part.used{opacity:.4;border-style:dashed;cursor:default}.part.used:after{content:"✓";color:var(--teal);font-weight:900}
+.buildmsg{min-height:46px;display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:14px;background:var(--soft);border:1px solid var(--line);font-weight:700;margin:10px 0}
+.buildmsg.ok{background:#e4f8f1;border-color:#9fdcc8;color:#0a5f4f}.buildmsg.bad{background:var(--warn-bg);border-color:var(--warn-line)}
+.lockable{position:relative;transition:opacity .2s}.lockable.locked{opacity:.45;pointer-events:none;filter:grayscale(.6)}
+.lockmsg{font-weight:800;color:var(--muted);margin:6px 0}
+.ghost text{font-size:11px;font-weight:800;fill:#64748b}
+/* error calc */
+.errgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:12px 0}
+.errresult{font-size:20px;font-weight:900;background:linear-gradient(135deg,#e8efff,#e4f8f1);border-radius:14px;padding:14px 16px;margin-top:8px}
+/* Dana helper */
+#dana{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:max(16px,env(safe-area-inset-bottom,0px));z-index:100;display:flex;flex-direction:column;align-items:flex-end;gap:10px}
+#danaBtn{display:flex;align-items:flex-end;gap:8px;background:none;border:0;padding:0;color:inherit}
+#danaBtn .bubble{background:var(--card);color:var(--ink);border:2px solid var(--blue);border-radius:16px 16px 4px 16px;padding:8px 12px;font-size:13.5px;font-weight:800;max-width:170px;text-align:left;box-shadow:var(--shadow);animation:bob 3s ease-in-out infinite}
+#danaBtn svg{width:84px;height:94px;filter:drop-shadow(0 6px 10px #1a2a6c44);transition:transform .2s}#danaBtn:hover svg{transform:rotate(-5deg) scale(1.05)}
+@keyframes bob{50%{transform:translateY(-4px)}}
+#danaPanel{width:min(380px,calc(100vw - 32px));height:min(520px,calc(100vh - 150px));background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:22px;box-shadow:0 20px 60px #0f1c4a47;display:flex;flex-direction:column;overflow:hidden}
+#danaPanel[hidden]{display:none}
+.dhead{display:flex;align-items:center;gap:10px;padding:10px 14px;background:linear-gradient(135deg,var(--head1),var(--head2));color:#fff}
+.dhead svg{width:40px;height:44px}.dhead b{font-size:17px;font-weight:900;flex:1}.dhead button{background:#ffffff26;padding:4px 10px;border-radius:9px}
+#danaMsgs{flex:1;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:8px;background:var(--soft2)}
+.msg{max-width:86%;padding:9px 12px;border-radius:14px;font-size:14.5px;line-height:1.45;white-space:pre-wrap}
+.msg.bot{background:var(--card);border:1px solid var(--line);align-self:flex-start;border-bottom-left-radius:4px}.msg.me{background:var(--blue);color:var(--on);align-self:flex-end;border-bottom-right-radius:4px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;padding:8px 12px 0}.chips button{padding:5px 10px;font-size:12.5px;border-radius:999px}
+#danaForm{display:flex;gap:6px;padding:10px 12px}#danaForm input{flex:1;min-width:0;padding:10px 12px;border:1px solid var(--line);border-radius:12px;font:inherit;background:var(--card);color:var(--ink)}
+/* themes */
+.contrast{--bg:#000;--card:#101010;--ink:#fff;--muted:#eee;--line:#fff;--soft:#1b1b1b;--soft2:#0c0c0c;--blue:#ffe600;--on:#000;--teal:#38f2ff;--warn-bg:#2a1d00;--warn-line:#ffe600;--shadow:none;--head1:#000;--head2:#000}
+.contrast header{color:#ffe600}.contrast .tag,.contrast .rubric span{color:#fff}.contrast .spring-stage,.contrast #tip .art{background:#fff}.contrast .buildmsg.ok{color:#000}
+.warm{--bg:#fff7e6;--blue:#7c3aed;--line:#e7d9ba;--soft:#fbf1d9;--soft2:#fffaf0;--head1:#5b21b6;--head2:#a855f7}
+.cool{--bg:#ecf8ff;--blue:#007783;--line:#c4e1e8;--soft:#e0f4f7;--soft2:#f3fbfd;--head1:#04485a;--head2:#00a3a8}
+.large-text{zoom:1.1}
+footer{text-align:center;color:var(--muted);padding:20px 20px 110px}
+@media(max-width:760px){section{padding:18px}.grid,.grid3,.controls,.simgrid,.studentgrid,.eqlist,.errgrid{grid-template-columns:1fr}.metrics{grid-template-columns:1fr 1fr}.language-tools{left:4%;right:4%;justify-content:flex-end}.language-tools select{max-width:120px}header{padding-top:80px}header .coil{display:none}table{font-size:12px}.graph-card canvas{height:280px}h2{font-size:21px}.builder{grid-template-columns:1fr}#danaBtn .bubble{display:none}}
+@media print{body{background:#fff!important;color:#111!important;font-size:11pt}header{background:#fff!important;color:#111!important;border-bottom:2px solid #222;padding:18px 0}.coil{display:none}.language-tools,nav,.toolbar,.btns,button,input[type=range],#dana,#tip,.tray,.hint{display:none!important}main{padding:0}.container{width:100%}section{box-shadow:none;border:1px solid #aaa;break-inside:avoid;padding:13px;margin:9px 0}.graph-card canvas{height:260px}input,textarea{border:1px solid #999!important}}
+</style></head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<linearGradient id="steel" x1="0" x2="1"><stop offset="0" stop-color="#e5e9f0"/><stop offset=".5" stop-color="#97a3b6"/><stop offset="1" stop-color="#d6dce6"/></linearGradient>
+<linearGradient id="brass" x1="0" x2="1"><stop offset="0" stop-color="#fde8a3"/><stop offset=".5" stop-color="#d9962b"/><stop offset="1" stop-color="#f7cf72"/></linearGradient>
+<linearGradient id="wood" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#f6d58e"/><stop offset="1" stop-color="#e0a94e"/></linearGradient>
+</defs></svg>
+
+<header>
+<div class="language-tools"><select id="language" aria-label="Language"><option value="kk">Қазақша</option><option value="ru">Русский</option><option value="en">English</option></select><select id="themeChoice" aria-label="Түстер"><option value="default">🎨 Қалыпты</option><option value="contrast">◐ Жоғары контраст</option><option value="warm">Жылы түстер</option><option value="cool">Суық түстер</option></select><button id="largeText" type="button" class="secondary">A+</button></div>
+<svg class="coil" viewBox="0 0 120 260" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round"><path d="M60 0V20Q10 32 60 44T60 68T60 92T60 116T60 140T60 164T60 188V210"/><rect x="30" y="214" width="60" height="40" rx="8" fill="#fff" stroke="none"/></svg>
+<div class="container"><span class="tag" data-i18n="tag">Физика • 7-сынып</span><h1 data-i18n="title">Серпімді деформацияларды зерттеу</h1><div class="rubric"><span data-i18n="rubric">1–10 бөлім</span><span>7.2.2.4</span><span>7.1.3.3</span></div></div>
+</header>
+<nav><div class="container">
+<a href="#question"><i>1</i><span data-i18n="nav1">Сұрақ</span></a><a href="#aim"><i>2</i><span data-i18n="nav2">Мақсат</span></a><a href="#hypothesis"><i>3</i><span data-i18n="nav3">Гипотеза</span></a><a href="#variables"><i>4</i><span data-i18n="nav4">Шамалар</span></a><a href="#safety"><i>5</i><span data-i18n="nav5">Қауіпсіздік</span></a><a href="#setup"><i>6</i><span data-i18n="nav6">Құралдар</span></a><a href="#procedure"><i>7</i><span data-i18n="nav7">Өлшеу</span></a><a href="#model"><i>8</i><span data-i18n="nav8">Модель</span></a><a href="#graphs"><i>9</i><span data-i18n="nav9">Нәтиже</span></a><a href="#compare"><i>10</i><span data-i18n="nav10">Салыстыру</span></a>
+</div></nav>
+<div class="container toolbar"><button onclick="window.print()" data-i18n="print">🖨️ Басып шығару</button><button class="pdf" onclick="window.print()" data-i18n="pdf">📄 PDF ретінде сақтау</button><span class="small" data-i18n="pdfhint">PDF сақтау үшін ашылған терезеде «Save as PDF / PDF ретінде сақтау» таңдаңыз.</span></div>
+
+<main class="container">
+<!-- 1 -->
+<section id="question"><h2><span class="num">1</span><span data-i18n="s1">Зерттеу сұрағы</span></h2>
+<div class="qbox"><p data-i18n="q1">Серіппеге түсірілген күш артқанда оның ұзаруы қалай өзгереді?</p><p data-i18n="q2">Серпімділік күшінің ұзаруға тәуелділік графигі арқылы серіппенің қатаңдық коэффициентін қалай анықтауға болады?</p></div>
+<div class="highlight" data-i18n="questionSimple"><b>Қарапайым түрде:</b> күшті арттырсақ, серіппе қаншалықты созылады және оның қатаңдығын қалай табамыз?</div></section>
+<!-- 2 -->
+<section id="aim"><h2><span class="num">2</span><span data-i18n="s2">Зерттеудің мақсаты мен міндеттері</span></h2>
+<div class="highlight"><b data-i18n="aimlabel">Зерттеу мақсаты:</b> <span data-i18n="aimtext"></span></div>
+<h3 data-i18n="tasks">Міндеттері</h3><ol><li data-i18n="task1"></li><li data-i18n="task2"></li><li data-i18n="task3"></li><li data-i18n="task4"></li><li data-i18n="task5"></li><li data-i18n="task6"></li><li data-i18n="task7"></li></ol></section>
+<!-- 3 -->
+<section id="hypothesis"><h2><span class="num">3</span><span data-i18n="s3">Гипотеза және физикалық негіздеме</span></h2>
+<div class="card"><b data-i18n="hypo"></b></div>
+<div class="formula">F<sub>серп</sub> = k·Δx</div>
+<p data-i18n="where">Мұндағы:</p>
+<ul><li data-i18n="w1"></li><li data-i18n="w2"></li><li data-i18n="w3"></li></ul>
+<div class="formula">k = F<sub>серп</sub> / Δx &nbsp;&nbsp; <span data-i18n="and">және</span> &nbsp;&nbsp; Δx = F<sub>серп</sub> / k</div>
+<p class="small" data-i18n="hookeNote"></p></section>
+<!-- 4 -->
+<section id="variables"><h2><span class="num">4</span><span data-i18n="s4">Тәуелсіз, тәуелді және тұрақты шамалар</span></h2>
+<div class="scroll"><table><thead><tr><th data-i18n="quantity">Шама</th><th data-i18n="type">Түрі</th><th data-i18n="symbol">Белгіленуі</th></tr></thead><tbody>
+<tr><td data-i18n="force"></td><td data-i18n="independent"></td><td>F</td></tr>
+<tr><td data-i18n="extension"></td><td data-i18n="dependent"></td><td>Δx</td></tr>
+<tr><td data-i18n="stiffness"></td><td data-i18n="constant"></td><td>k</td></tr>
+<tr><td data-i18n="springtype"></td><td data-i18n="constant"></td><td>—</td></tr>
+<tr><td data-i18n="initiallength"></td><td data-i18n="constant"></td><td>l₀</td></tr>
+<tr><td data-i18n="instrument"></td><td data-i18n="constant"></td><td data-i18n="ruler"></td></tr></tbody></table></div>
+<div class="grid3"><div class="card">🟢 <b data-i18n="independent"></b><p data-i18n="indExplain"></p></div><div class="card">🔵 <b data-i18n="dependent"></b><p data-i18n="depExplain"></p></div><div class="card">🟠 <b data-i18n="constant"></b><p data-i18n="constExplain"></p></div></div></section>
+<!-- 5 -->
+<section id="safety"><h2><span class="num">5</span><span data-i18n="s5">Қауіпсіздік ережелері</span></h2>
+<ol><li data-i18n="safe1"></li><li data-i18n="safe2"></li><li data-i18n="safe3"></li><li data-i18n="safe4"></li><li data-i18n="safe5"></li><li data-i18n="safe6"></li><li data-i18n="safe7"></li></ol>
+<div class="warning" data-i18n="safetyNote"></div></section>
+<!-- 6 -->
+<section id="setup"><h2><span class="num">6</span><span data-i18n="s6">Құралдар мен қондырғы сызбасы</span></h2>
+<div class="grid"><div><h3 data-i18n="equipment">Қажетті құралдар</h3>
+<div class="hint small"><span>👆</span><span data-i18n="hoverHint"></span></div>
+<ul class="eqlist">
+<li data-tip="stand" tabindex="0"><span class="eqicon" data-art="stand"></span><span data-i18n="eq1"></span></li>
+<li data-tip="spring" tabindex="0"><span class="eqicon" data-art="spring"></span><span data-i18n="eq2"></span></li>
+<li data-tip="hanger" tabindex="0"><span class="eqicon" data-art="hanger"></span><span data-i18n="eq3"></span></li>
+<li data-tip="masses" tabindex="0"><span class="eqicon" data-art="masses"></span><span data-i18n="eq4"></span></li>
+<li data-tip="ruler" tabindex="0"><span class="eqicon" data-art="ruler"></span><span data-i18n="eq5"></span></li>
+<li data-tip="dyno" tabindex="0"><span class="eqicon" data-art="dyno"></span><span data-i18n="eq6"></span></li>
+</ul>
+<p data-i18n="lengths"></p><div class="formula">Δx = l − l₀</div></div>
+<div class="card"><svg viewBox="0 0 360 330" role="img" aria-label="Setup">
+<g data-tip="stand"><rect x="45" y="25" width="250" height="13" rx="4" fill="#64748b"/><rect x="64" y="35" width="10" height="250" rx="4" fill="#94a3b8"/><rect x="35" y="282" width="85" height="12" rx="5" fill="#64748b"/><path d="M74 44 L104 44 L104 59" fill="none" stroke="#64748b" stroke-width="4"/></g>
+<g data-tip="spring"><rect x="86" y="59" width="36" height="126" fill="transparent"/><path d="M104 59 L104 70 Q92 78 104 86 Q116 94 104 102 Q92 110 104 118 Q116 126 104 134 Q92 142 104 150 Q116 158 104 166 L104 185" fill="none" stroke="#2563eb" stroke-width="4" stroke-linecap="round"/></g>
+<g data-tip="hanger"><rect x="94" y="185" width="20" height="14" fill="transparent"/><path d="M104 185 v12" stroke="#64748b" stroke-width="3"/></g>
+<g data-tip="masses"><rect x="80" y="197" width="48" height="36" rx="5" fill="#f59e0b" stroke="#b45309" stroke-width="2"/><text x="104" y="219" text-anchor="middle" fill="#422006" font-weight="700">m</text></g>
+<g data-tip="ruler"><rect x="205" y="59" width="26" height="138" rx="3" fill="#f2c776" stroke="#b7822c"/><g stroke="#7a5518" stroke-width="1.2"><path d="M205 59h10M205 72h6M205 86h6M205 100h6M205 114h10M205 127h6M205 141h6M205 155h6M205 169h10M205 183h6"/></g></g>
+<line x1="160" y1="59" x2="160" y2="197" stroke="#0f766e" stroke-width="2" stroke-dasharray="5 4"/><path d="M154 68 l6 -9 l6 9 M154 188 l6 9 l6 -9" fill="none" stroke="#0f766e" stroke-width="2"/>
+<text x="170" y="126" fill="#0f766e" font-size="15" font-weight="800">Δx</text><text x="137" y="53" fill="#334155" font-size="12">l₀</text><text x="137" y="205" fill="#334155" font-size="12">l</text>
+<text x="183" y="252" fill="#475569" font-size="12" data-i18n="diagStand">Штатив</text><text x="183" y="270" fill="#475569" font-size="12" data-i18n="diagSpring">Серіппе + жүк</text></svg>
+<p class="small" data-i18n="diagramNote"></p></div></div></section>
+<!-- 7 -->
+<section id="procedure"><h2><span class="num">7</span><span data-i18n="s7">Өлшеу реті және нәтижелер кестесі</span></h2>
+<ol><li data-i18n="proc1"></li><li data-i18n="proc2"></li><li data-i18n="proc3"></li><li data-i18n="proc4"></li><li data-i18n="proc5"></li><li data-i18n="proc6"></li><li data-i18n="proc7"></li></ol>
+<div class="scroll"><table id="dataTable"><thead><tr><th>№</th><th data-i18n="thm"></th><th data-i18n="thF"></th><th data-i18n="thl0"></th><th data-i18n="thl"></th><th data-i18n="thx"></th><th data-i18n="thk"></th><th data-i18n="thdk"></th><th data-i18n="theps"></th></tr></thead><tbody id="tableBody"></tbody></table></div>
+<div class="btns"><button id="addRow" data-i18n="addRow">+ Өлшеу қосу</button><button id="fillExample" class="secondary" data-i18n="fillExample"></button><button id="clearTable" class="secondary" data-i18n="clear"></button></div>
+<p class="small" data-i18n="tableNote"></p></section>
+<!-- 8 -->
+<section id="model"><h2><span class="num">8</span><span data-i18n="s8">Интерактивті модель</span></h2>
+<p data-i18n="modelIntro"></p>
+<h3 data-i18n="buildTitle"></h3>
+<div class="builder"><span class="small" data-i18n="trayTitle"></span>
+<div class="tray">
+<button class="part" data-part="stand" data-tip="stand" draggable="true"><span class="eqicon" data-art="stand"></span><span data-i18n="eq1"></span></button>
+<button class="part" data-part="spring" data-tip="spring" draggable="true"><span class="eqicon" data-art="spring"></span><span data-i18n="eq2"></span></button>
+<button class="part" data-part="hanger" data-tip="hanger" draggable="true"><span class="eqicon" data-art="hanger"></span><span data-i18n="eq3"></span></button>
+<button class="part" data-part="masses" data-tip="masses" draggable="true"><span class="eqicon" data-art="masses"></span><span data-i18n="eq4"></span></button>
+<button class="part" data-part="ruler" data-tip="ruler" draggable="true"><span class="eqicon" data-art="ruler"></span><span data-i18n="eq5"></span></button>
+</div></div>
+<div id="buildMsg" class="buildmsg" aria-live="polite"></div>
+<div class="simgrid"><div>
+<div id="controlsWrap" class="lockable locked"><div class="controls"><div class="control"><label><span data-i18n="forceLabel">Күш, F</span><output id="fOut">4 Н</output></label><input id="forceSlider" type="range" min="0.5" max="5" step="0.5" value="2"><div class="small" data-i18n="forceRange"></div></div><div class="control"><label><span data-i18n="kLabel"></span><output id="kOut">20 Н/м</output></label><input id="kSlider" type="range" min="10" max="100" step="5" value="20"><div class="small" data-i18n="kRange"></div></div></div>
+<div class="metrics"><div class="metric"><small data-i18n="extensionMetric"></small><strong id="xOut">0,200 м</strong></div><div class="metric"><small data-i18n="cmMetric"></small><strong id="cmOut">20,0 см</strong></div><div class="metric"><small data-i18n="ratioMetric"></small><strong id="ratioOut">20 Н/м</strong></div></div>
+<div class="formula">Δx = F / k</div><p id="calculationText" class="highlight"></p>
+<div class="btns"><button id="recordBtn" data-i18n="recordBtn"></button></div><div id="recStatus" class="status" aria-live="polite"></div>
+<p class="small" data-i18n="recordNote"></p></div>
+<p id="lockMsg" class="lockmsg" data-i18n="lockedNote"></p>
+<div class="small" data-i18n="modelCaveat"></div>
+<div class="btns"><button id="resetBuild" class="secondary" data-i18n="resetBuild"></button></div></div>
+
+<div class="spring-stage" id="stage"><svg viewBox="0 0 320 390" role="img" aria-label="Interactive model">
+<g id="ghosts" class="ghost" fill="none" stroke="#94a3b8" stroke-width="2" stroke-dasharray="6 5">
+<g id="ghStand"><rect x="27" y="20" width="243" height="343" rx="8"/><text x="35" y="338" stroke="none" data-i18n="eq1">Штатив</text></g>
+<g id="ghSpring"><rect x="92" y="52" width="40" height="115"/><text x="138" y="112" stroke="none" data-i18n="eq2">Серіппе</text></g>
+<g id="ghHanger"><rect x="92" y="167" width="40" height="16"/><text x="138" y="180" stroke="none" data-i18n="eq3">Жүк ілгіш</text></g>
+<g id="ghMasses"><rect x="81" y="184" width="62" height="44"/><text x="148" y="212" stroke="none" data-i18n="eq4">Жүктер</text></g>
+<g id="ghRuler"><rect x="226" y="160" width="40" height="190"/><text x="190" y="340" stroke="none" data-i18n="eq5">Сызғыш</text></g></g>
+<g id="gStand" data-tip="stand"><rect x="40" y="20" width="230" height="14" rx="5" fill="#64748b"/><rect x="58" y="31" width="12" height="325" rx="5" fill="#94a3b8"/><rect x="27" y="350" width="90" height="13" rx="5" fill="#64748b"/><path d="M64 35 H112 V52" fill="none" stroke="#64748b" stroke-width="5"/></g>
+<g id="gSpring" data-tip="spring"><path id="simSpring" d="" fill="none" stroke="#2563eb" stroke-width="4" stroke-linecap="round"/></g>
+<g id="gHanger" data-tip="hanger"><path id="simHook" d="" fill="none" stroke="#64748b" stroke-width="3"/><rect id="simPlate" x="87" y="0" width="50" height="6" rx="3" fill="#94a3b8" stroke="#64748b"/></g>
+<g id="gMasses" data-tip="masses"><rect id="simLoad" x="81" y="0" width="62" height="44" rx="7" fill="#f59e0b" stroke="#b45309" stroke-width="2"/><text id="simLoadText" x="112" y="0" text-anchor="middle" font-size="14" fill="#422006" font-weight="800"></text></g>
+<g id="gRuler" data-tip="ruler"><rect x="244" y="313" width="6" height="40" fill="#b7822c"/><rect x="224" y="350" width="46" height="13" rx="5" fill="#64748b"/><rect x="236" y="167" width="26" height="146" rx="3" fill="url(#wood)" stroke="#b7822c"/><g id="rulerTicks" stroke="#6b4a12" stroke-width="1.2" fill="#6b4a12" font-size="9" font-weight="700"></g>
+<line id="zeroLine" x1="112" y1="167" x2="236" y2="167" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4 4"/>
+<line id="readLine" x1="112" y1="0" x2="262" y2="0" stroke="#dc2626" stroke-width="2"/><text id="simXText" x="150" y="0" fill="#0f766e" font-size="14" font-weight="900"></text><path id="dimArrow" d="" fill="none" stroke="#0f766e" stroke-width="2"/></g>
+</svg><p class="small" data-i18n="springNote"></p></div></div></section>
+<!-- 9 -->
+<section id="graphs"><h2><span class="num">9</span><span data-i18n="s9">Нәтиже, формула және график</span></h2>
+<div class="formula">F<sub>серп</sub> = k·Δx &nbsp;&nbsp;|&nbsp;&nbsp; k = F / Δx</div>
+<p data-i18n="graphExplain"></p>
+<div class="graph-card"><h3 data-i18n="graphTitle"></h3><canvas id="forceGraph" width="1000" height="420" aria-label="Force versus extension graph"></canvas><div class="legend"><span style="--c:#2563eb" data-i18n="theoryLegend"></span><span style="--c:#dc2626" data-i18n="dataLegend"></span><span style="--c:#ea580c" data-i18n="currentLegend"></span></div><p class="small" data-i18n="graphNote"></p></div>
+<div class="graph-card"><h3 data-i18n="graphTitle2"></h3><canvas id="extensionGraph" width="1000" height="420" aria-label="Stiffness k per measurement"></canvas><div class="legend"><span style="--c:#dc2626" data-i18n="legK"></span><span style="--c:#0f766e" data-i18n="legMean"></span><span style="--c:#ea580c" data-i18n="legModel"></span></div><p class="small" data-i18n="graphNote2"></p></div>
+<h3 data-i18n="errTitle"></h3><p data-i18n="errIntro"></p>
+<div class="formula">k̄ = (k₁ + k₂ + … + kₙ) / n<br>Δkᵢ = |kᵢ − k̄|<br>Δk = (Δk₁ + Δk₂ + … + Δkₙ) / n<br>ε = Δk / k̄ · 100 %</div>
+<div class="errgrid"><div class="metric"><small data-i18n="errMean"></small><strong id="errK">—</strong></div><div class="metric"><small data-i18n="errAbs"></small><strong id="errDk">—</strong></div><div class="metric"><small data-i18n="errRel"></small><strong id="errEps">—</strong></div></div>
+<div class="errresult" id="errResult">—</div></section>
+<!-- 10 -->
+<section id="compare"><h2><span class="num">10</span><span data-i18n="s10">Модель болжамы мен тәжірибелік мәнді салыстыру</span></h2>
+<div class="grid"><div class="card"><h3>🖥️ <span data-i18n="modelPrediction"></span></h3><p data-i18n="modelPredictionText"></p><div class="formula">Δx<sub>модель</sub> = F / k</div><p id="compareModel"></p></div>
+<div class="card"><h3>🔬 <span data-i18n="measuredValue"></span></h3><p data-i18n="measuredText"></p><div class="formula">k<sub>тәж</sub> = F / Δx<sub>тәж</sub></div><p id="measuredSummary"></p></div></div>
+<h3 data-i18n="compareTableTitle"></h3>
+<div class="scroll"><table><thead><tr><th data-i18n="quantity"></th><th data-i18n="modelPrediction"></th><th data-i18n="measuredValue"></th><th data-i18n="cAbs"></th><th data-i18n="cRel"></th></tr></thead><tbody>
+<tr><td>F, <span class="uN">Н</span></td><td id="cmpFModel">—</td><td id="cmpFMeasured">—</td><td id="cmpFAbs">—</td><td id="cmpFRel">—</td></tr>
+<tr><td>Δx, <span class="um">м</span></td><td id="cmpXModel">—</td><td id="cmpXMeasured">—</td><td id="cmpXAbs">—</td><td id="cmpXRel">—</td></tr>
+<tr><td>k, <span class="uNm">Н/м</span></td><td id="cmpKModel">—</td><td id="cmpKMeasured">—</td><td id="cmpKAbs">—</td><td id="cmpKRel">—</td></tr></tbody></table></div>
+<div class="formula">Δ = |A<sub>тәж</sub> − A<sub>модель</sub>| &nbsp;&nbsp;|&nbsp;&nbsp; ε = Δ / A<sub>модель</sub> · 100 %</div>
+<p class="small" data-i18n="compareNote"></p></section>
+
+<section id="studentInfo"><h2 data-i18n="studentTitle"></h2>
+<div class="studentgrid"><label><span data-i18n="studentName"></span><input id="studentName"></label><label><span data-i18n="studentClass"></span><input id="studentClass"></label></div>
+<label for="conclusion"><b data-i18n="conclusionLabel"></b></label><textarea id="conclusion"></textarea>
+<div class="btns"><button id="saveWork" data-i18n="save"></button><button id="startOver" class="secondary" data-i18n="restart"></button></div><div id="saveStatus" class="status" aria-live="polite"></div></section>
+<section id="conclusionSection"><h2 data-i18n="conclusionTitle"></h2><p data-i18n="conclusionText"></p><div class="formula">k = F / Δx</div></section>
+</main>
+<footer data-i18n="footer"></footer>
+
+<div id="tip" role="tooltip"><div class="art"></div><b></b><p></p></div>
+
+<div id="dana">
+<div id="danaPanel" hidden>
+<div class="dhead"><span id="danaAvatarHead"></span><b data-i18n="danaName">Дана</b><button id="danaClose" type="button" aria-label="Close">✕</button></div>
+<div id="danaMsgs" aria-live="polite"></div>
+<div class="chips" id="danaChips"></div>
+<form id="danaForm"><input id="danaInput" autocomplete="off" data-ph="danaPlaceholder"><button type="submit" data-i18n="danaSend">Жіберу</button></form>
+</div>
+<button id="danaBtn" type="button"><span class="bubble" data-i18n="danaBubble">Түсінбедің бе? Данадан сұра!</span><span id="danaAvatarBtn"></span></button>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const G=9.8;
+/* ================= Dana (original helper character) ================= */
+const OWL=`<svg viewBox="0 0 100 110" aria-hidden="true"><ellipse cx="50" cy="104" rx="26" ry="4" fill="#0003"/><ellipse cx="50" cy="70" rx="35" ry="36" fill="#5568f0"/><ellipse cx="17" cy="72" rx="9" ry="22" fill="#4151d6" transform="rotate(12 17 72)"/><ellipse cx="83" cy="72" rx="9" ry="22" fill="#4151d6" transform="rotate(-12 83 72)"/><ellipse cx="50" cy="82" rx="21" ry="23" fill="#e5eaff"/><path d="M38 76q4 5 8 0M50 76q4 5 8 0M44 88q4 5 8 0M56 88q4 5 8 0M32 88q4 5 8 0" stroke="#9aa8f5" stroke-width="2" fill="none" stroke-linecap="round"/><circle cx="35" cy="54" r="14" fill="#fff" stroke="#27307a" stroke-width="2.5"/><circle cx="65" cy="54" r="14" fill="#fff" stroke="#27307a" stroke-width="2.5"/><circle cx="37" cy="55" r="6.5" fill="#1b2150"/><circle cx="63" cy="55" r="6.5" fill="#1b2150"/><circle cx="39" cy="52.5" r="2.2" fill="#fff"/><circle cx="65" cy="52.5" r="2.2" fill="#fff"/><path d="M45 62h10l-5 10z" fill="#f59e0b" stroke="#b86e00" stroke-width="1.5" stroke-linejoin="round"/><path d="M39 98l-3 7m6-7l-1 7m18-7l1 7m6-7l3 7" stroke="#f59e0b" stroke-width="3" stroke-linecap="round"/><polygon points="50,6 88,21 50,36 12,21" fill="#222a5c"/><path d="M30 29v10q20 8 40 0V29" fill="#2f3a85"/><path d="M82 23v16" stroke="#f5b83a" stroke-width="2.5"/><circle cx="82" cy="41" r="3.5" fill="#f5b83a"/></svg>`;
+$('danaAvatarBtn').innerHTML=OWL;$('danaAvatarHead').innerHTML=OWL;
+
+/* ================= Equipment illustrations ================= */
+const S='stroke="#475569" stroke-width="1.5"';
+const ART={
+stand:`<svg viewBox="0 0 120 120"><rect x="12" y="104" width="78" height="9" rx="3" fill="url(#steel)" ${S}/><rect x="45" y="10" width="8" height="96" rx="2" fill="url(#steel)" ${S}/><rect x="45" y="20" width="64" height="7" rx="2" fill="url(#steel)" ${S}/><rect x="41" y="16" width="16" height="16" rx="3" fill="#64748b"/><circle cx="49" cy="24" r="3.2" fill="#cbd5e1"/></svg>`,
+spring:`<svg viewBox="0 0 120 120"><circle cx="60" cy="10" r="5" fill="none" stroke="#64748b" stroke-width="2.5"/><path d="M60 15V24Q30 30 60 36T60 48T60 60T60 72T60 84T60 96V106" fill="none" stroke="#64748b" stroke-width="5" stroke-linecap="round"/><path d="M60 15V24Q30 30 60 36T60 48T60 60T60 72T60 84T60 96V106" fill="none" stroke="#cfd8e6" stroke-width="1.6" stroke-linecap="round"/><circle cx="60" cy="110" r="4" fill="none" stroke="#64748b" stroke-width="2.5"/></svg>`,
+hanger:`<svg viewBox="0 0 120 120"><path d="M52 22a8 8 0 1 1 16 0V32" fill="none" stroke="#64748b" stroke-width="3.5" stroke-linecap="round"/><rect x="56.5" y="32" width="7" height="52" rx="2" fill="url(#steel)" ${S}/><rect x="30" y="84" width="60" height="7" rx="3" fill="url(#steel)" ${S}/><rect x="56" y="78" width="8" height="8" fill="#64748b"/></svg>`,
+masses:`<svg viewBox="0 0 120 120"><g ${S}><rect x="8" y="72" width="30" height="30" rx="4" fill="url(#brass)"/><rect x="45" y="56" width="30" height="46" rx="4" fill="url(#brass)"/><rect x="82" y="38" width="30" height="64" rx="4" fill="url(#brass)"/></g><g fill="#7a4a06" font-size="11" font-weight="800" text-anchor="middle"><text x="23" y="91">50</text><text x="60" y="83">100</text><text x="97" y="73">200</text></g><g stroke="#7a4a06" stroke-width="2"><path d="M23 72v-6M60 56v-6M97 38v-6"/></g></svg>`,
+ruler:`<svg viewBox="0 0 120 120"><rect x="6" y="44" width="108" height="32" rx="3" fill="url(#wood)" stroke="#b7822c" stroke-width="1.5"/><g stroke="#6b4a12" stroke-width="1.3"><path d="M14 44v10M19 44v6M24 44v6M29 44v6M34 44v6M39 44v10M44 44v6M49 44v6M54 44v6M59 44v6M64 44v10M69 44v6M74 44v6M79 44v6M84 44v6M89 44v10M94 44v6M99 44v6M104 44v6"/></g><g fill="#6b4a12" font-size="9" font-weight="800" text-anchor="middle"><text x="14" y="68">0</text><text x="39" y="68">5</text><text x="64" y="68">10</text><text x="89" y="68">15</text></g></svg>`,
+dyno:`<svg viewBox="0 0 120 120"><circle cx="60" cy="12" r="6" fill="none" stroke="#64748b" stroke-width="3"/><rect x="46" y="18" width="28" height="74" rx="8" fill="#e9f2ff" ${S}/><rect x="52" y="26" width="16" height="52" rx="3" fill="#fff" stroke="#94a3b8"/><g stroke="#334155" stroke-width="1.2"><path d="M52 32h8M52 40h5M52 48h8M52 56h5M52 64h8M52 72h5"/></g><rect x="52" y="52" width="16" height="3" fill="#dc2626"/><path d="M60 92v10a6 6 0 1 1-6 6" fill="none" stroke="#64748b" stroke-width="3" stroke-linecap="round"/></svg>`
+};
+document.querySelectorAll('[data-art]').forEach(el=>el.innerHTML=ART[el.dataset.art]);
+
+/* ================= Translations ================= */
+const T={
+kk:{legK:'Әр өлшеудегі k',legMean:'Орташа k̄',legModel:'Модельдегі k',tag:'Физика • 7-сынып',title:'Серпімді деформацияларды зерттеу',rubric:'1–10 бөлім',
+nav1:'Сұрақ',nav2:'Мақсат',nav3:'Гипотеза',nav4:'Шамалар',nav5:'Қауіпсіздік',nav6:'Құралдар',nav7:'Өлшеу',nav8:'Модель',nav9:'Нәтиже',nav10:'Салыстыру',
+print:'🖨️ Басып шығару',pdf:'📄 PDF ретінде сақтау',pdfhint:'PDF сақтау үшін ашылған терезеде «Save as PDF / PDF ретінде сақтау» таңдаңыз.',
+s1:'Зерттеу сұрағы',s2:'Зерттеудің мақсаты мен міндеттері',s3:'Гипотеза және физикалық негіздеме',s4:'Тәуелсіз, тәуелді және тұрақты шамалар',s5:'Қауіпсіздік ережелері',s6:'Құралдар мен қондырғы сызбасы',s7:'Өлшеу реті және нәтижелер кестесі',s8:'Интерактивті модель',s9:'Нәтиже, формула және график',s10:'Модель болжамы мен тәжірибелік мәнді салыстыру',
+q1:'Серіппеге түсірілген күш артқанда оның ұзаруы қалай өзгереді?',q2:'Серпімділік күшінің ұзаруға тәуелділік графигі арқылы серіппенің қатаңдық коэффициентін қалай анықтауға болады?',
+questionSimple:'<b>Қарапайым түрде:</b> күшті арттырсақ, серіппе қаншалықты созылады және оның қатаңдығын қалай табамыз?',
+aimlabel:'Зерттеу мақсаты:',aimtext:'Серпімді деформацияны тәжірибе жүзінде зерттеу, серпімділік күшінің серіппенің ұзаруына тәуелділігін анықтау және осы тәуелділіктің графигін пайдаланып серіппенің қатаңдық коэффициентін есептеу.',tasks:'Міндеттері',
+task1:'Серпімді деформация және серпімділік күші туралы теорияны қарастыру.',task2:'Серіппеге әртүрлі күш түсіріп, ұзаруын өлшеу.',task3:'Күш пен ұзару арасындағы байланысты анықтау.',task4:'F(Δx) графигін тұрғызу.',task5:'Графиктен серіппенің қатаңдық коэффициентін анықтау.',task6:'Өлшеудің абсолюттік және салыстырмалы қателігін есептеу.',task7:'Тәжірибелік нәтижелерді модель болжамымен салыстыру.',
+hypo:'Егер серіппеге түсірілетін күшті арттырсақ, онда серіппенің ұзаруы да артады, себебі серпімділік шегінде күш пен ұзару бір-біріне тура пропорционал болады.',
+where:'Мұндағы:',w1:'<b>F<sub>серп</sub></b> — серпімділік күшінің модулі, Н;',w2:'<b>k</b> — серіппенің қатаңдық коэффициенті, Н/м;',w3:'<b>Δx</b> — серіппенің ұзаруы, м.',and:'және',
+hookeNote:'Бұл тәуелділік серіппені тым қатты созбаған жағдайда ғана орындалады: күш алынғанда серіппе бастапқы ұзындығына қайта оралуы керек. Күш екі есе артса, ұзару да екі есе артады.',
+quantity:'Шама',type:'Түрі',symbol:'Белгіленуі',force:'Серіппеге түсірілген күш',extension:'Серіппенің ұзаруы',stiffness:'Серіппенің қатаңдығы',springtype:'Серіппенің түрі',initiallength:'Бастапқы ұзындық',instrument:'Өлшеу құралы',ruler:'сызғыш',independent:'Тәуелсіз',dependent:'Тәуелді',constant:'Тұрақты',
+indExplain:'Өзіміз өзгертеміз: F.',depExplain:'Өзгеретін нәтиже: Δx.',constExplain:'Тәжірибе барысында бірдей сақталады.',
+safe1:'Серіппені штативке мықтап бекітіңіз.',safe2:'Жүктерді серіппеге абайлап іліңіз және шешіңіз.',safe3:'Серіппеге рұқсат етілгеннен артық жүк түсірмеңіз.',safe4:'Жүктерді бетке немесе денеге бағыттамаңыз.',safe5:'Серіппені шамадан тыс созбаңыз.',safe6:'Штативтің орнықты тұрғанын тексеріңіз.',safe7:'Құралдарды құлатпаңыз, жұмыс соңында орнын жинаңыз.',
+safetyNote:'Қауіпсіздік ережесін сақтамай тәжірибені бастамаңыз. Серіппе үзіліп кететіндей күш қолданбаңыз.',
+equipment:'Қажетті құралдар',hoverHint:'Құралдың үстіне меңзерді апарыңыз (телефонда басыңыз): ол қандай екенін және не үшін керек екенін көресіз.',
+eq1:'Штатив',eq2:'Серіппе',eq3:'Жүк ілгіш',eq4:'Жүктер',eq5:'Сызғыш',eq6:'Динамометр (қосымша)',
+lengths:'Серіппенің бастапқы ұзындығы — l₀; жүк ілінгеннен кейінгі ұзындығы — l.',diagramNote:'Сызба — қондырғының шартты көрінісі. Δx — серіппенің ұзаруы.',diagStand:'Штатив',diagSpring:'Серіппе + жүк',
+tip_stand_t:'Штатив',tip_stand_d:'Металл тірек. Серіппе оның жоғарғы жағына ілініп, бір орында қозғалмай тұрады.',
+tip_spring_t:'Серіппе',tip_spring_d:'Болаттан жасалған созылатын шиыршық. Жүктің әсерінен ұзарады, жүк алынса бұрынғы ұзындығына қайтады. Біз дәл осы серіппенің қатаңдығын зерттейміз.',
+tip_hanger_t:'Жүк ілгіш',tip_hanger_d:'Жүктер қойылатын ілмекті тұғыр. Серіппенің төменгі ұшына ілінеді.',
+tip_masses_t:'Жүктер',tip_masses_d:'Массасы белгілі (50 г, 100 г, 200 г) металл цилиндрлер. Массасы бойынша күшті F = mg формуласымен есептейміз.',
+tip_ruler_t:'Сызғыш',tip_ruler_d:'Ұзындықты өлшейді. Серіппенің бастапқы l₀ және жүк ілінгендегі l ұзындығын өлшеп, Δx = l − l₀ табамыз.',
+tip_dyno_t:'Динамометр',tip_dyno_d:'Күшті өлшейтін құрал: ішіндегі серіппе созылған сайын көрсеткіш шкала бойынша жылжиды. Күшті жүксіз де өлшеуге болады.',
+proc1:'Серіппені штативке мықтап бекітіңіз.',proc2:'Жүк ілмей тұрып бастапқы ұзындықты l₀ өлшеңіз.',proc3:'Серіппеге белгілі массалы жүк іліңіз.',proc4:'Жаңа ұзындықты l өлшеп, Δx = l − l₀ есептеңіз.',proc5:'Күшті F = mg формуласымен есептеңіз; g ≈ 9,8 Н/кг.',proc6:'Әртүрлі жүктермен өлшеуді кемінде 5 рет қайталаңыз.',proc7:'F және Δx мәндерін кестеге енгізіп, график тұрғызыңыз.',
+thm:'m (кг)',thF:'F (Н)',thl0:'l₀ (м)',thl:'l (м)',thx:'Δx (м)',thk:'k (Н/м)',thdk:'Δk (Н/м)',theps:'ε (%)',
+addRow:'+ Өлшеу қосу',fillExample:'Мысал деректерді енгізу',clear:'Кестені тазалау',tableNote:'F, Δx, k, Δk және ε бағандары енгізілген деректер бойынша автоматты есептеледі. Ұзындықты метрмен енгізіңіз. Δk — осы өлшеудегі k мәнінің орташа мәннен айырмасы; ε — оның орташа мәнге қатынасы, %.',
+modelIntro:'Алдымен қондырғыны өзің жина, содан кейін күш пен серіппенің қатаңдығын өзгертіп, серіппенің созылуын бақыла.',buildTitle:'1-қадам. Қондырғыны жина',trayTitle:'Бөлшектер:',
+msgStart:'Бөлшекті сахнаға сүйреп апар немесе оны бас. Реті: штатив → серіппе → жүк ілгіш → жүктер, сызғышты да ұмытпа.',
+need_stand:'Алдымен штативті орнат — серіппе соған ілінеді.',need_spring:'Жүк ілгішті ілуге серіппе керек. Алдымен серіппені іл.',need_hanger:'Жүктер ілгішке қойылады. Алдымен жүк ілгішті іл.',
+msgPlaced:'Дұрыс! Келесі бөлшекті ал.',msgReady:'Тамаша, қондырғы жиналды! Енді күш пен қатаңдықты өзгертіп көр.',msgAlready:'Бұл бөлшек орнында тұр.',
+lockedNote:'Қондырғыны толық жинағанда ғана басқару ашылады.',resetBuild:'Қайта жинау',
+forceLabel:'Күш, F',kLabel:'Серіппенің қатаңдығы, k',forceRange:'0,5–5 Н',kRange:'10–100 Н/м',extensionMetric:'Модель ұзаруы Δx',cmMetric:'Сантиметрмен',ratioMetric:'F/Δx қатынасы',
+modelCaveat:'Бұл — идеалданған модель. Нақты серіппеде өлшеу қателігі болуы мүмкін.',springNote:'Күш артқанда жүк төмен түседі; k артқанда бірдей күш үшін ұзару азаяды. Қызыл сызық сызғыштан Δx оқуды көрсетеді.',
+recordBtn:'Өлшеуді кестеге жазу',recordNote:'Нақты өлшеудегідей, l мәніне ±1 мм оқу қателігі қосылады. Сондықтан k мәндері аздап ерекшеленеді.',recorded:'Кестеге жазылды (7-бөлім).',
+graphExplain:'Графикте көлденең осьте Δx — ұзару (м), тік осьте F — күш (Н). Серіппе тым қатты созылмаған кезде график нөлден өтетін түзу сызық болады. Түзудің көлбеулігі серіппенің қатаңдығына тең.',
+graphTitle:'F күшінің Δx ұзаруына тәуелділігі',graphTitle2:'Әр өлшеудегі қатаңдық коэффициенті k',theoryLegend:'Теориялық модель',dataLegend:'Кестедегі өлшеулер',currentLegend:'Қазіргі модель мәні',
+graphNote:'Көк сызық — Гук заңы бойынша болжам. Қызыл нүктелер — кестедегі өлшеулер; олар бір-біріне қосылып, тәжірибелік үрдісті көрсетеді.',graphNote2:'Бағандар — кестедегі әр өлшеуден алынған k мәні. Жасыл сызық — орташа k̄, қызғылт сары үзік сызық — модельдегі k. Бағандар k̄ сызығына неғұрлым жақын болса, өлшеу соғұрлым дәл.',
+errTitle:'Өлшеу қателігін есептеу',errIntro:'Абсолюттік қателік Δk — әр өлшеудегі k мәні мен орташа k̄ мәнінің айырмасы (модулі). Салыстырмалы қателік ε — Δk-ның k̄-ға қатынасы, пайызбен.',
+errMean:'Орташа k̄',errAbs:'Абсолюттік қателік Δk',errRel:'Салыстырмалы қателік ε',errNone:'Нәтиже көру үшін 7-бөлімдегі кестеге кемінде 2 өлшеу енгізіңіз.',errRes:'Серіппенің қатаңдық коэффициенті',
+modelPrediction:'Модель болжамы',modelPredictionText:'Модель ұзаруды Гук заңы арқылы есептейді:',measuredValue:'Тәжірибеде өлшенген',measuredText:'Нақты тәжірибеде l₀ және l өлшеніп, Δx = l − l₀ есептеледі.',
+noData:'Кестеге өлшеу енгізілгенде серіппенің орташа қатаңдық коэффициенті осы жерде көрсетіледі.',meanK:'Серіппенің орташа қатаңдық коэффициенті',meas:'өлшеу',
+compareTableTitle:'Салыстыру кестесі',cAbs:'Абсолюттік қателік Δ',cRel:'Салыстырмалы қателік ε, %',
+compareNote:'Модель Δx мәнін тәжірибедегі орташа F үшін есептейді. Айырмашылық өлшеу дәлдігіне, серіппенің нақты қасиеттеріне және шкаланы оқуға байланысты болуы мүмкін.',
+studentTitle:'Оқушы туралы мәлімет және жұмысты сақтау',studentName:'Оқушының аты-жөні',studentClass:'Сыныбы',conclusionLabel:'Қорытындыңызды жазыңыз',save:'Жұмысты сақтау және бекіту',restart:'Қайта бастау',
+conclusionTitle:'Қорытындыға арналған нұсқаулық',conclusionText:'Тәжірибе барысында серіппеге түсірілген күш артқан сайын оның ұзаруы да артатыны байқалады. Серіппені тым қатты созбаған кезде бұл байланыс Гук заңымен өрнектеледі: F = kΔx. F–Δx графигінің көлбеулігі арқылы серіппенің қатаңдық коэффициенті анықталады.',
+footer:'№4 зертханалық жұмыс • Серпімді деформацияларды зерттеу • Физика',
+danaName:'Дана',danaBubble:'Түсінбедің бе? Данадан сұра!',danaHello:'Сәлем! Мен Данамын, физика көмекшісімін. Бұл жұмыста нені түсінбесең, сұра!',danaPlaceholder:'Сұрағыңды жаз...',danaSend:'Жіберу',danaThinking:'Ойланып жатырмын...',
+chip1:'Δx дегеніміз не?',chip2:'k қалай табылады?',chip3:'Қателікті қалай есептеймін?',chip4:'Модельді қалай жинаймын?'},
+ru:{legK:'k каждого измерения',legMean:'Среднее k̄',legModel:'k модели',tag:'Физика • 7 класс',title:'Исследование упругих деформаций',rubric:'Разделы 1–10',
+nav1:'Вопрос',nav2:'Цель',nav3:'Гипотеза',nav4:'Величины',nav5:'Безопасность',nav6:'Оборудование',nav7:'Измерения',nav8:'Модель',nav9:'Результат',nav10:'Сравнение',
+print:'🖨️ Печать',pdf:'📄 Сохранить в PDF',pdfhint:'Для сохранения PDF выберите «Save as PDF / Сохранить как PDF» в окне печати.',
+s1:'Исследовательский вопрос',s2:'Цель и задачи исследования',s3:'Гипотеза и физическое обоснование',s4:'Независимые, зависимые и постоянные величины',s5:'Правила безопасности',s6:'Оборудование и схема установки',s7:'Порядок измерений и таблица результатов',s8:'Интерактивная модель',s9:'Результат, формула и график',s10:'Сравнение прогноза модели и опытного значения',
+q1:'Как изменяется удлинение пружины при увеличении приложенной силы?',q2:'Как определить коэффициент жёсткости пружины по графику зависимости силы упругости от удлинения?',
+questionSimple:'<b>Проще говоря:</b> насколько сильнее растянется пружина при увеличении силы и как найти её жёсткость?',
+aimlabel:'Цель исследования:',aimtext:'Экспериментально изучить упругую деформацию, определить зависимость силы упругости от удлинения пружины и, используя график этой зависимости, вычислить коэффициент жёсткости пружины.',tasks:'Задачи',
+task1:'Повторить теорию об упругой деформации и силе упругости.',task2:'Прикладывать к пружине разные силы и измерять удлинение.',task3:'Определить связь между силой и удлинением.',task4:'Построить график F(Δx).',task5:'Определить коэффициент жёсткости пружины по графику.',task6:'Вычислить абсолютную и относительную погрешность измерений.',task7:'Сравнить опытные результаты с прогнозом модели.',
+hypo:'Если увеличить силу, действующую на пружину, её удлинение тоже увеличится, потому что в пределах упругости сила и удлинение прямо пропорциональны друг другу.',
+where:'Где:',w1:'<b>F<sub>упр</sub></b> — модуль силы упругости, Н;',w2:'<b>k</b> — коэффициент жёсткости пружины, Н/м;',w3:'<b>Δx</b> — удлинение пружины, м.',and:'и',
+hookeNote:'Зависимость выполняется, только если пружину не растягивать слишком сильно: после снятия силы она должна возвращаться к начальной длине. При увеличении силы в два раза удлинение тоже увеличивается в два раза.',
+quantity:'Величина',type:'Тип',symbol:'Обозначение',force:'Сила, приложенная к пружине',extension:'Удлинение пружины',stiffness:'Жёсткость пружины',springtype:'Тип пружины',initiallength:'Начальная длина',instrument:'Измерительный прибор',ruler:'линейка',independent:'Независимая',dependent:'Зависимая',constant:'Постоянная',
+indExplain:'Изменяем сами: F.',depExplain:'Результат изменения: Δx.',constExplain:'Остаётся одинаковой во время опыта.',
+safe1:'Надёжно закрепите пружину на штативе.',safe2:'Осторожно подвешивайте и снимайте грузы.',safe3:'Не превышайте допустимую нагрузку пружины.',safe4:'Не направляйте грузы в лицо или тело.',safe5:'Не растягивайте пружину чрезмерно.',safe6:'Проверьте устойчивость штатива.',safe7:'Не роняйте оборудование; после опыта уберите рабочее место.',
+safetyNote:'Не начинайте опыт без соблюдения правил безопасности. Не прикладывайте силу, способную разорвать пружину.',
+equipment:'Необходимое оборудование',hoverHint:'Наведите курсор на предмет (на телефоне нажмите): увидите, как он выглядит и для чего нужен.',
+eq1:'Штатив',eq2:'Пружина',eq3:'Держатель для грузов',eq4:'Грузы',eq5:'Линейка',eq6:'Динамометр (дополнительно)',
+lengths:'Начальная длина пружины — l₀; длина после подвешивания груза — l.',diagramNote:'Схематичное изображение установки. Δx — удлинение пружины.',diagStand:'Штатив',diagSpring:'Пружина + груз',
+tip_stand_t:'Штатив',tip_stand_d:'Металлическая опора. К её верхней части подвешивают пружину, чтобы она неподвижно висела на одном месте.',
+tip_spring_t:'Пружина',tip_spring_d:'Стальная растягивающаяся спираль. Под действием груза удлиняется, а когда груз снимают, возвращается к прежней длине. Мы изучаем именно жёсткость этой пружины.',
+tip_hanger_t:'Держатель для грузов',tip_hanger_d:'Крючок с площадкой, на которую кладут грузы. Подвешивается к нижнему концу пружины.',
+tip_masses_t:'Грузы',tip_masses_d:'Металлические цилиндры известной массы (50 г, 100 г, 200 г). По массе находим силу: F = mg.',
+tip_ruler_t:'Линейка',tip_ruler_d:'Измеряет длину. Измеряем начальную длину пружины l₀ и длину с грузом l, затем находим Δx = l − l₀.',
+tip_dyno_t:'Динамометр',tip_dyno_d:'Прибор для измерения силы: внутри пружина, при растяжении указатель смещается по шкале. Силу можно измерить и без грузов.',
+proc1:'Надёжно закрепите пружину на штативе.',proc2:'Измерьте начальную длину l₀ без груза.',proc3:'Подвесьте груз известной массы.',proc4:'Измерьте новую длину l и вычислите Δx = l − l₀.',proc5:'Рассчитайте силу по формуле F = mg; g ≈ 9,8 Н/кг.',proc6:'Повторите измерения не менее пяти раз с разными грузами.',proc7:'Внесите F и Δx в таблицу и постройте график.',
+thm:'m (кг)',thF:'F (Н)',thl0:'l₀ (м)',thl:'l (м)',thx:'Δx (м)',thk:'k (Н/м)',thdk:'Δk (Н/м)',theps:'ε (%)',
+addRow:'+ Добавить измерение',fillExample:'Заполнить примером',clear:'Очистить таблицу',tableNote:'Столбцы F, Δx, k, Δk и ε вычисляются автоматически. Длину вводите в метрах. Δk — отличие k этого измерения от среднего значения; ε — его отношение к среднему, %.',
+modelIntro:'Сначала соберите установку сами, затем меняйте силу и жёсткость пружины и наблюдайте, как она растягивается.',buildTitle:'Шаг 1. Соберите установку',trayTitle:'Детали:',
+msgStart:'Перетащите деталь на сцену или нажмите на неё. Порядок: штатив → пружина → держатель → грузы; не забудьте линейку.',
+need_stand:'Сначала установите штатив: пружина подвешивается к нему.',need_spring:'Держатель вешают на пружину. Сначала подвесьте пружину.',need_hanger:'Грузы кладут на держатель. Сначала повесьте держатель.',
+msgPlaced:'Верно! Берите следующую деталь.',msgReady:'Отлично, установка собрана! Теперь меняйте силу и жёсткость.',msgAlready:'Эта деталь уже на месте.',
+lockedNote:'Управление откроется, когда установка будет собрана полностью.',resetBuild:'Собрать заново',
+forceLabel:'Сила, F',kLabel:'Жёсткость пружины, k',forceRange:'0,5–5 Н',kRange:'10–100 Н/м',extensionMetric:'Удлинение модели Δx',cmMetric:'В сантиметрах',ratioMetric:'Отношение F/Δx',
+modelCaveat:'Это идеализированная модель. В реальном опыте возможна погрешность измерений.',springNote:'При увеличении силы груз опускается; при увеличении k удлинение при той же силе уменьшается. Красная линия показывает отсчёт Δx по линейке.',
+recordBtn:'Записать измерение в таблицу',recordNote:'Как в реальном опыте, к l добавляется ошибка отсчёта ±1 мм, поэтому значения k немного различаются.',recorded:'Записано в таблицу (раздел 7).',
+graphExplain:'По горизонтальной оси отложено Δx — удлинение (м), по вертикальной — F, сила (Н). Если пружину не растягивать слишком сильно, график — прямая, проходящая через начало координат. Её наклон равен жёсткости пружины.',
+graphTitle:'Зависимость силы F от удлинения Δx',graphTitle2:'Коэффициент жёсткости k по каждому измерению',theoryLegend:'Теоретическая модель',dataLegend:'Измерения из таблицы',currentLegend:'Текущее значение модели',
+graphNote:'Синяя линия — прогноз по закону Гука. Красные точки — измерения из таблицы; они соединены линией, чтобы показать тенденцию.',graphNote2:'Столбики — значения k из каждого измерения в таблице. Зелёная линия — среднее k̄, оранжевая пунктирная — k модели. Чем ближе столбики к линии k̄, тем точнее измерения.',
+errTitle:'Расчёт погрешности измерений',errIntro:'Абсолютная погрешность Δk — модуль разности между k каждого измерения и средним k̄. Относительная погрешность ε — отношение Δk к k̄ в процентах.',
+errMean:'Среднее k̄',errAbs:'Абсолютная погрешность Δk',errRel:'Относительная погрешность ε',errNone:'Введите в таблицу раздела 7 минимум 2 измерения, чтобы увидеть результат.',errRes:'Коэффициент жёсткости пружины',
+modelPrediction:'Прогноз модели',modelPredictionText:'Модель вычисляет удлинение по закону Гука:',measuredValue:'Измеренное в опыте',measuredText:'В опыте измеряют l₀ и l, затем вычисляют Δx = l − l₀.',
+noData:'После ввода измерений здесь появится средний коэффициент жёсткости пружины.',meanK:'Средний коэффициент жёсткости пружины',meas:'измер.',
+compareTableTitle:'Таблица сравнения',cAbs:'Абсолютная погрешность Δ',cRel:'Относительная погрешность ε, %',
+compareNote:'Модель вычисляет Δx для средней силы F из опыта. Разница может быть связана с точностью измерений, свойствами реальной пружины и считыванием шкалы.',
+studentTitle:'Данные ученика и сохранение работы',studentName:'ФИО ученика',studentClass:'Класс',conclusionLabel:'Напишите вывод',save:'Сохранить и заблокировать работу',restart:'Начать заново',
+conclusionTitle:'Подсказка для вывода',conclusionText:'В ходе опыта видно: чем больше сила, тем больше удлинение пружины. Если пружину не растягивать слишком сильно, связь описывается законом Гука: F = kΔx. Коэффициент жёсткости пружины определяют по наклону графика F–Δx.',
+footer:'Лабораторная работа №4 • Исследование упругих деформаций • Физика',
+danaName:'Дана',danaBubble:'Не понятно? Спроси у Даны!',danaHello:'Привет! Я Дана, помощница по физике. Если что-то непонятно в этой работе, спрашивай!',danaPlaceholder:'Напиши вопрос...',danaSend:'Отправить',danaThinking:'Думаю...',
+chip1:'Что такое Δx?',chip2:'Как найти k?',chip3:'Как посчитать погрешность?',chip4:'Как собрать модель?'},
+en:{legK:'k of each measurement',legMean:'Mean k̄',legModel:'Model k',tag:'Physics • Grade 7',title:'Investigating elastic deformation',rubric:'Sections 1–10',
+nav1:'Question',nav2:'Aim',nav3:'Hypothesis',nav4:'Variables',nav5:'Safety',nav6:'Equipment',nav7:'Measurements',nav8:'Model',nav9:'Results',nav10:'Comparison',
+print:'🖨️ Print',pdf:'📄 Save as PDF',pdfhint:'To save a PDF, choose “Save as PDF” in the print dialog.',
+s1:'Research question',s2:'Aim and objectives',s3:'Hypothesis and physical explanation',s4:'Independent, dependent and controlled variables',s5:'Safety rules',s6:'Equipment and setup diagram',s7:'Measurement procedure and results table',s8:'Interactive model',s9:'Results, formula and graph',s10:'Comparing model prediction and experimental value',
+q1:'How does the extension of a spring change when the applied force increases?',q2:'How can the spring stiffness constant be determined from the graph of elastic force against extension?',
+questionSimple:'<b>In simple terms:</b> how much more will the spring stretch if the force increases, and how can we find its stiffness?',
+aimlabel:'Research aim:',aimtext:'Investigate elastic deformation experimentally, determine how the elastic force depends on the extension of the spring and, using the graph of this dependence, calculate the spring stiffness constant.',tasks:'Objectives',
+task1:'Review elastic deformation and elastic force.',task2:'Apply different forces to the spring and measure the extension.',task3:'Identify the relationship between force and extension.',task4:'Plot the F(Δx) graph.',task5:'Determine the spring stiffness constant from the graph.',task6:'Calculate the absolute and relative error of the measurements.',task7:'Compare experimental results with the model prediction.',
+hypo:'If the force on the spring increases, its extension will also increase, because within the elastic limit force and extension are directly proportional to each other.',
+where:'Where:',w1:'<b>F<sub>el</sub></b> — magnitude of the elastic force, N;',w2:'<b>k</b> — spring stiffness constant, N/m;',w3:'<b>Δx</b> — extension of the spring, m.',and:'and',
+hookeNote:'This holds only if the spring is not stretched too far: when the force is removed, it must return to its original length. Doubling the force doubles the extension.',
+quantity:'Quantity',type:'Type',symbol:'Symbol',force:'Force applied to the spring',extension:'Spring extension',stiffness:'Spring stiffness',springtype:'Spring type',initiallength:'Initial length',instrument:'Measuring tool',ruler:'ruler',independent:'Independent',dependent:'Dependent',constant:'Controlled',
+indExplain:'Changed by us: F.',depExplain:'The changing result: Δx.',constExplain:'Kept the same throughout the experiment.',
+safe1:'Securely attach the spring to the stand.',safe2:'Attach and remove masses carefully.',safe3:'Do not exceed the spring’s rated load.',safe4:'Do not point loads toward anyone’s face or body.',safe5:'Do not overstretch the spring.',safe6:'Check that the stand is stable.',safe7:'Do not drop equipment; tidy the work area after the experiment.',
+safetyNote:'Do not start before reviewing safety rules. Never apply enough force to break the spring.',
+equipment:'Required equipment',hoverHint:'Hover over an item (tap on a phone) to see what it looks like and what it is for.',
+eq1:'Stand',eq2:'Spring',eq3:'Mass hanger',eq4:'Masses',eq5:'Ruler',eq6:'Spring balance (optional)',
+lengths:'Initial spring length — l₀; length after hanging the load — l.',diagramNote:'Schematic setup. Δx is the spring extension.',diagStand:'Stand',diagSpring:'Spring + load',
+tip_stand_t:'Stand',tip_stand_d:'A metal support. The spring hangs from its top so it stays still in one place.',
+tip_spring_t:'Spring',tip_spring_d:'A stretchy steel coil. It gets longer under a load and returns to its old length when the load is removed. This is the spring whose stiffness we study.',
+tip_hanger_t:'Mass hanger',tip_hanger_d:'A hook with a platform for the masses. It hangs from the lower end of the spring.',
+tip_masses_t:'Masses',tip_masses_d:'Metal cylinders of known mass (50 g, 100 g, 200 g). From the mass we find the force: F = mg.',
+tip_ruler_t:'Ruler',tip_ruler_d:'Measures length. We measure the initial length l₀ and the length with the load l, then find Δx = l − l₀.',
+tip_dyno_t:'Spring balance',tip_dyno_d:'A tool for measuring force: a spring inside stretches and a pointer moves along the scale. It can measure force without masses.',
+proc1:'Securely attach the spring to the stand.',proc2:'Measure the initial length l₀ without a load.',proc3:'Hang a load of known mass on the spring.',proc4:'Measure the new length l and calculate Δx = l − l₀.',proc5:'Calculate force using F = mg; g ≈ 9.8 N/kg.',proc6:'Repeat at least five measurements with different loads.',proc7:'Enter F and Δx in the table and plot a graph.',
+thm:'m (kg)',thF:'F (N)',thl0:'l₀ (m)',thl:'l (m)',thx:'Δx (m)',thk:'k (N/m)',thdk:'Δk (N/m)',theps:'ε (%)',
+addRow:'+ Add measurement',fillExample:'Fill example data',clear:'Clear table',tableNote:'F, Δx, k, Δk and ε are calculated automatically. Enter lengths in metres. Δk is how far this measurement’s k is from the mean; ε is that difference relative to the mean, in %.',
+modelIntro:'First build the setup yourself, then change the force and spring stiffness and watch the spring stretch.',buildTitle:'Step 1. Build the setup',trayTitle:'Parts:',
+msgStart:'Drag a part onto the stage or tap it. Order: stand → spring → hanger → masses; do not forget the ruler.',
+need_stand:'Place the stand first: the spring hangs from it.',need_spring:'The hanger goes on the spring. Hang the spring first.',need_hanger:'Masses sit on the hanger. Hang the hanger first.',
+msgPlaced:'Correct! Take the next part.',msgReady:'Great, the setup is built! Now change the force and stiffness.',msgAlready:'This part is already in place.',
+lockedNote:'The controls unlock once the setup is fully built.',resetBuild:'Rebuild',
+forceLabel:'Force, F',kLabel:'Spring stiffness, k',forceRange:'0.5–5 N',kRange:'10–100 N/m',extensionMetric:'Model extension Δx',cmMetric:'In centimetres',ratioMetric:'F/Δx ratio',
+modelCaveat:'This is an idealized model. Real measurements may include errors.',springNote:'Increasing force lowers the load; increasing k reduces extension for the same force. The red line shows the Δx reading on the ruler.',
+recordBtn:'Record measurement in table',recordNote:'As in a real experiment, a ±1 mm reading error is added to l, so the k values differ slightly.',recorded:'Recorded in the table (section 7).',
+graphExplain:'The horizontal axis shows Δx — extension (m); the vertical axis shows F — force (N). If the spring is not stretched too far, the graph is a straight line through the origin. Its slope equals the spring stiffness.',
+graphTitle:'Force F versus extension Δx',graphTitle2:'Stiffness constant k for each measurement',theoryLegend:'Theoretical model',dataLegend:'Table measurements',currentLegend:'Current model value',
+graphNote:'The blue line is the Hooke’s law prediction. Red points are table measurements; they are connected to show the trend.',graphNote2:'Bars are the k values from each measurement in the table. The green line is the mean k̄, the orange dashed line is the model’s k. The closer the bars are to k̄, the more precise the measurements.',
+errTitle:'Calculating measurement error',errIntro:'The absolute error Δk is the difference (without sign) between each measurement’s k and the mean k̄. The relative error ε is Δk divided by k̄, as a percentage.',
+errMean:'Mean k̄',errAbs:'Absolute error Δk',errRel:'Relative error ε',errNone:'Enter at least 2 measurements in the section 7 table to see the result.',errRes:'Spring stiffness constant',
+modelPrediction:'Model prediction',modelPredictionText:'The model calculates extension using Hooke’s law:',measuredValue:'Measured in the experiment',measuredText:'In a real experiment, measure l₀ and l, then calculate Δx = l − l₀.',
+noData:'The mean spring stiffness constant will appear here after measurements are entered.',meanK:'Mean spring stiffness constant',meas:'measurements',
+compareTableTitle:'Comparison table',cAbs:'Absolute error Δ',cRel:'Relative error ε, %',
+compareNote:'The model calculates Δx for the mean force F from the experiment. Differences may come from measurement precision, the real spring’s properties and reading the scale.',
+studentTitle:'Student details and save work',studentName:'Student name',studentClass:'Class',conclusionLabel:'Write your conclusion',save:'Save and lock work',restart:'Start over',
+conclusionTitle:'Conclusion guide',conclusionText:'The experiment shows that the larger the force, the larger the extension. If the spring is not stretched too far, the relationship follows Hooke’s law: F = kΔx. The spring stiffness constant is found from the slope of the F–Δx graph.',
+footer:'Lab work No. 4 • Investigating elastic deformation • Physics',
+danaName:'Dana',danaBubble:'Stuck? Ask Dana!',danaHello:'Hi! I’m Dana, your physics helper. Ask me anything in this lab that is not clear!',danaPlaceholder:'Type your question...',danaSend:'Send',danaThinking:'Thinking...',
+chip1:'What is Δx?',chip2:'How do I find k?',chip3:'How do I calculate the error?',chip4:'How do I build the model?'}
+};
+function lang(){return $('language').value}
+function tr(k){return (T[lang()]&&T[lang()][k])||T.kk[k]||k}
+function fmt(n,d=3){return Number.isFinite(n)?n.toFixed(d).replace('.',','):'—'}
+function U(){const en=lang()==='en';return{N:en?'N':'Н',Nm:en?'N/m':'Н/м',m:en?'m':'м',cm:en?'cm':'см'}}
+
+/* ================= Tooltips ================= */
+const tip=$('tip');
+function showTip(el,ev){
+  const k=el.dataset.tip;if(!ART[k])return;
+  tip.querySelector('.art').innerHTML=ART[k];tip.querySelector('b').textContent=tr('tip_'+k+'_t');tip.querySelector('p').textContent=tr('tip_'+k+'_d');
+  const r=el.getBoundingClientRect(),w=268,h=250;
+  let x=ev&&ev.clientX!=null&&ev.type!=='focusin'?ev.clientX+16:r.right+10,y=ev&&ev.clientY!=null&&ev.type!=='focusin'?ev.clientY+16:r.top;
+  if(x+w>innerWidth-8)x=Math.max(8,(ev&&ev.clientX!=null?ev.clientX:r.left)-w-16);
+  if(y+h>innerHeight-8)y=Math.max(8,innerHeight-h-8);
+  tip.style.left=x+'px';tip.style.top=y+'px';tip.classList.add('on');
+}
+function hideTip(){tip.classList.remove('on')}
+document.addEventListener('mouseover',e=>{const el=e.target.closest&&e.target.closest('[data-tip]');el?showTip(el,e):hideTip()});
+document.addEventListener('mousemove',e=>{if(tip.classList.contains('on')){const el=e.target.closest&&e.target.closest('[data-tip]');if(el)showTip(el,e)}});
+document.addEventListener('focusin',e=>{const el=e.target.closest&&e.target.closest('[data-tip]');el?showTip(el,e):hideTip()});
+document.addEventListener('focusout',hideTip);
+document.addEventListener('click',e=>{const el=e.target.closest&&e.target.closest('[data-tip]');if(el&&matchMedia('(hover:none)').matches)showTip(el,e);else if(!el)hideTip()});
+document.addEventListener('dragstart',hideTip);
+
+/* ================= Table ================= */
+let rowCount=0;
+function addRow(data={}){rowCount++;const t=document.createElement('tr');
+t.innerHTML=`<td class="rowNo">${rowCount}</td><td><input type="number" min="0" step="any" class="mass" value="${data.m??''}" aria-label="m"></td><td class="forceCell">—</td><td><input type="number" min="0" step="any" class="l0" value="${data.l0??'0.100'}" aria-label="l0"></td><td><input type="number" min="0" step="any" class="length" value="${data.l??''}" aria-label="l"></td><td class="xCell">—</td><td class="kCell">—</td><td class="dkCell">—</td><td class="epsCell">—</td>`;
+$('tableBody').appendChild(t);t.querySelectorAll('input').forEach(i=>i.addEventListener('input',refreshAll));calculateTable()}
+function rows(){return [...$('tableBody').rows].map(r=>{const mi=r.querySelector('.mass'),li=r.querySelector('.length'),l0i=r.querySelector('.l0');const m=Number(mi.value),l0=Number(l0i.value),l=Number(li.value);
+const hasM=mi.value!==''&&m>0,hasL=li.value!==''&&l0i.value!==''&&l>l0;const F=hasM?m*G:NaN,x=hasL?l-l0:NaN,k=Number.isFinite(F)&&Number.isFinite(x)?F/x:NaN;return{m,F,l0,l,x,k,valid:Number.isFinite(k)}})}
+function stats(){const r=rows().filter(d=>d.valid);if(!r.length)return null;const n=r.length,kb=r.reduce((s,d)=>s+d.k,0)/n;const dks=r.map(d=>Math.abs(d.k-kb));const dk=dks.reduce((a,b)=>a+b,0)/n;return{r,n,kb,dk,eps:dk/kb*100,F:r.reduce((s,d)=>s+d.F,0)/n,x:r.reduce((s,d)=>s+d.x,0)/n}}
+function calculateTable(){const st=stats();[...$('tableBody').rows].forEach((row,i)=>{const d=rows()[i];row.querySelector('.rowNo').textContent=i+1;
+row.querySelector('.forceCell').textContent=Number.isFinite(d.F)?fmt(d.F,2):'—';row.querySelector('.xCell').textContent=Number.isFinite(d.x)?fmt(d.x,3):'—';row.querySelector('.kCell').textContent=d.valid?fmt(d.k,1):'—';
+const dk=d.valid&&st?Math.abs(d.k-st.kb):NaN;row.querySelector('.dkCell').textContent=Number.isFinite(dk)?fmt(dk,2):'—';row.querySelector('.epsCell').textContent=Number.isFinite(dk)?fmt(dk/st.kb*100,1):'—'})}
+function firstEmptyRow(){return [...$('tableBody').rows].find(r=>r.querySelector('.mass').value===''&&r.querySelector('.length').value==='')}
+
+/* ================= Builder / model ================= */
+const REQ={stand:[],spring:['stand'],hanger:['spring'],masses:['hanger'],ruler:['stand']};
+const asm={stand:0,spring:0,hanger:0,masses:0,ruler:0};
+const ready=()=>Object.values(asm).every(Boolean);
+const LAYER={stand:['gStand','ghStand'],spring:['gSpring','ghSpring'],hanger:['gHanger','ghHanger'],masses:['gMasses','ghMasses'],ruler:['gRuler','ghRuler']};
+let msgKey='msgStart',msgCls='';
+function say(k,cls=''){msgKey=k;msgCls=cls;const b=$('buildMsg');b.textContent=tr(k);b.className='buildmsg '+cls}
+function place(p){
+  if(asm[p])return say('msgAlready');
+  const miss=REQ[p].find(q=>!asm[q]);
+  if(miss){say('need_'+miss,'bad');const st=$('stage');st.classList.remove('shake');void st.offsetWidth;st.classList.add('shake');return}
+  asm[p]=1;refreshBuild();say(ready()?'msgReady':'msgPlaced','ok');
+}
+function refreshBuild(){
+  for(const p in LAYER){$(LAYER[p][0]).style.display=asm[p]?'':'none';$(LAYER[p][1]).style.display=asm[p]?'none':''}
+  document.querySelectorAll('.part').forEach(b=>b.classList.toggle('used',!!asm[b.dataset.part]));
+  const rd=ready();$('controlsWrap').classList.toggle('locked',!rd);$('lockMsg').style.display=rd?'none':'';
+  updateModel();
+}
+document.querySelectorAll('.part').forEach(b=>{
+  b.addEventListener('click',()=>place(b.dataset.part));
+  b.addEventListener('dragstart',e=>{e.dataTransfer.setData('text/plain',b.dataset.part);e.dataTransfer.effectAllowed='copy'});
+});
+const stage=$('stage');
+stage.addEventListener('dragover',e=>{e.preventDefault();stage.classList.add('dragover')});
+stage.addEventListener('dragleave',()=>stage.classList.remove('dragover'));
+stage.addEventListener('drop',e=>{e.preventDefault();stage.classList.remove('dragover');const p=e.dataTransfer.getData('text/plain');if(asm.hasOwnProperty(p))place(p)});
+$('resetBuild').addEventListener('click',()=>{for(const p in asm)asm[p]=0;refreshBuild();say('msgStart')});
+
+// ruler ticks (2.8 px per cm, zero at the relaxed end of the spring, y=167)
+(function(){let s='';for(let i=0;i<=50;i++){const y=167+i*2.8,len=i%10===0?10:i%5===0?7:4;s+=`<line x1="236" y1="${y}" x2="${236+len}" y2="${y}"/>`;if(i%10===0&&i>0)s+=`<text x="249" y="${y+3}" stroke="none">${i}</text>`}$('rulerTicks').innerHTML=s})();
+
+function updateModel(){
+  const F=+$('forceSlider').value,k=+$('kSlider').value,x=F/k,u=U();
+  $('fOut').textContent=fmt(F,1)+' '+u.N;$('kOut').textContent=fmt(k,0)+' '+u.Nm;$('xOut').textContent=fmt(x,3)+' '+u.m;$('cmOut').textContent=fmt(x*100,1)+' '+u.cm;$('ratioOut').textContent=fmt(F/x,1)+' '+u.Nm;
+  $('calculationText').textContent=`Δx = ${fmt(F,1)} ${u.N} / ${fmt(k,0)} ${u.Nm} = ${fmt(x,3)} ${u.m} = ${fmt(x*100,1)} ${u.cm}`;
+  const rd=ready(),top=52,base=115,stretch=rd?x*280:0,len=base+stretch,bottom=top+len;
+  let d=`M112 ${top} L112 ${top+10}`;const loops=9,step=(len-20)/loops;for(let i=0;i<loops;i++){const y=top+10+i*step;d+=` Q${i%2===0?91:133} ${y+step*.5} 112 ${y+step}`}d+=` L112 ${bottom}`;
+  $('simSpring').setAttribute('d',d);$('simHook').setAttribute('d',`M112 ${bottom} v10`);$('simPlate').setAttribute('y',bottom+10);
+  $('simLoad').setAttribute('y',bottom+16);$('simLoadText').setAttribute('y',bottom+43);$('simLoadText').textContent=`F = ${fmt(F,1)} ${u.N}`;
+  const showRead=asm.ruler&&rd;['readLine','simXText','dimArrow'].forEach(i=>$(i).style.display=showRead?'':'none');
+  if(showRead){$('readLine').setAttribute('y1',bottom);$('readLine').setAttribute('y2',bottom);$('simXText').setAttribute('x',150);$('simXText').setAttribute('y',Math.max(160,(167+bottom)/2+4));$('simXText').textContent=`Δx = ${fmt(x*100,1)} ${u.cm}`;$('dimArrow').setAttribute('d',`M140 167V${bottom}M135 ${167+7}l5 -7l5 7M135 ${bottom-7}l5 7l5 -7`);}
+  $('simXText').setAttribute('x',150);
+  updateCompare();drawGraphs();
+}
+function recordMeasurement(){
+  if(!ready())return;const F=+$('forceSlider').value,k=+$('kSlider').value,x=F/k;
+  const noise=(Math.floor(Math.random()*3)-1)*0.001,l0=0.1;let l=Math.round((l0+x+noise)*1000)/1000;if(l<=l0)l=l0+0.001;
+  const data={m:Math.round(F/G*1000)/1000,l0:'0.100',l};
+  let row=firstEmptyRow();if(!row){addRow(data)}else{row.querySelector('.mass').value=data.m;row.querySelector('.l0').value=data.l0;row.querySelector('.length').value=data.l}
+  refreshAll();$('recStatus').textContent=tr('recorded');
+}
+$('recordBtn').addEventListener('click',recordMeasurement);
+
+/* ================= Graphs ================= */
+function drawGraph(id,xLabel,yLabel,theory,measured,current,mode){const c=$(id),ctx=c.getContext('2d'),w=c.width,h=c.height;ctx.clearRect(0,0,w,h);ctx.fillStyle='#fff';ctx.fillRect(0,0,w,h);const pad={l:75,r:28,t:30,b:65},pw=w-pad.l-pad.r,ph=h-pad.t-pad.b;const vm=measured.filter(p=>Number.isFinite(p.x)&&Number.isFinite(p.y));
+const maxX=Math.max(0.1,...theory.map(p=>p.x),...vm.map(p=>p.x),current.x)*1.12,maxY=Math.max(0.1,...theory.map(p=>p.y),...vm.map(p=>p.y),current.y)*1.12;const X=x=>pad.l+x/maxX*pw,Y=y=>h-pad.b-y/maxY*ph;
+ctx.strokeStyle='#e5eaf2';ctx.lineWidth=1;ctx.fillStyle='#475569';ctx.font='15px Nunito,system-ui';ctx.textAlign='center';ctx.textBaseline='top';
+for(let i=0;i<=5;i++){const x=maxX*i/5,y=maxY*i/5;ctx.beginPath();ctx.moveTo(X(x),pad.t);ctx.lineTo(X(x),h-pad.b);ctx.stroke();ctx.beginPath();ctx.moveTo(pad.l,Y(y));ctx.lineTo(w-pad.r,Y(y));ctx.stroke();ctx.fillText(x.toFixed(2),X(x),h-pad.b+10);ctx.textAlign='right';ctx.textBaseline='middle';ctx.fillText(y.toFixed(2),pad.l-10,Y(y));ctx.textAlign='center';ctx.textBaseline='top'}
+ctx.strokeStyle='#64748b';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(pad.l,pad.t);ctx.lineTo(pad.l,h-pad.b);ctx.lineTo(w-pad.r,h-pad.b);ctx.stroke();
+ctx.fillStyle='#1e293b';ctx.font='bold 17px Nunito,system-ui';ctx.fillText(xLabel,pad.l+pw/2,h-30);ctx.save();ctx.translate(22,pad.t+ph/2);ctx.rotate(-Math.PI/2);ctx.fillText(yLabel,0,0);ctx.restore();
+function series(pts,color,connect,r){if(!pts.length)return;ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineWidth=3;if(connect){ctx.beginPath();pts.forEach((p,i)=>i?ctx.lineTo(X(p.x),Y(p.y)):ctx.moveTo(X(p.x),Y(p.y)));ctx.stroke()}pts.forEach(p=>{ctx.beginPath();ctx.arc(X(p.x),Y(p.y),r,0,Math.PI*2);ctx.fill()})}
+series(theory,'#2563eb',true,0);series(vm.sort((a,b)=>a.x-b.x),'#dc2626',vm.length>1,6);series([current],'#ea580c',false,7);
+ctx.fillStyle='#334155';ctx.font='bold 18px Nunito,system-ui';ctx.textAlign='left';ctx.fillText(mode==='Fx'?'F = k·Δx':'Δx = F / k',pad.l+12,pad.t+8)}
+function drawGraphs(){const F=+$('forceSlider').value,k=+$('kSlider').value,x=F/k,L=lang();
+const lx=L==='en'?'Extension Δx (m)':L==='ru'?'Удлинение Δx (м)':'Ұзару Δx (м)',lf=L==='en'?'Force F (N)':L==='ru'?'Сила F (Н)':'Күш F (Н)';
+const t1=Array.from({length:31},(_,i)=>{const f=5*i/30;return{x:f/k,y:f}});const r=rows().filter(d=>d.valid);
+drawGraph('forceGraph',lx,lf,t1,r.map(d=>({x:d.x,y:d.F})),{x,y:F},'Fx');
+drawKBars(k)}
+
+function drawKBars(kModel){const c=$('extensionGraph'),ctx=c.getContext('2d'),w=c.width,h=c.height,u=U(),L=lang();ctx.clearRect(0,0,w,h);ctx.fillStyle='#fff';ctx.fillRect(0,0,w,h);
+const st=stats(),pad={l:75,r:28,t:36,b:65},pw=w-pad.l-pad.r,ph=h-pad.t-pad.b;ctx.textBaseline='middle';
+if(!st){ctx.fillStyle='#64748b';ctx.font='18px Nunito,system-ui';ctx.textAlign='center';ctx.fillText(tr('errNone'),w/2,h/2);return}
+const ks=st.r.map(d=>d.k),maxY=Math.max(kModel,...ks)*1.2,Y=v=>h-pad.b-v/maxY*ph,n=ks.length,slot=pw/n,bw=Math.min(90,slot*.55);
+ctx.font='15px Nunito,system-ui';ctx.strokeStyle='#e5eaf2';ctx.lineWidth=1;ctx.fillStyle='#475569';ctx.textAlign='right';
+for(let i=0;i<=5;i++){const v=maxY*i/5;ctx.beginPath();ctx.moveTo(pad.l,Y(v));ctx.lineTo(w-pad.r,Y(v));ctx.stroke();ctx.fillText(v.toFixed(1),pad.l-10,Y(v))}
+ctx.fillStyle='#0f766e22';ctx.fillRect(pad.l,Y(st.kb+st.dk),pw,Y(st.kb-st.dk)-Y(st.kb+st.dk));
+ks.forEach((k,i)=>{const x=pad.l+slot*i+(slot-bw)/2;ctx.fillStyle='#dc2626';ctx.fillRect(x,Y(k),bw,h-pad.b-Y(k));ctx.fillStyle='#1e293b';ctx.font='bold 15px Nunito,system-ui';ctx.textAlign='center';ctx.fillText(k.toFixed(1),x+bw/2,Y(k)-12);ctx.fillStyle='#475569';ctx.font='15px Nunito,system-ui';ctx.textBaseline='top';ctx.fillText(String(i+1),x+bw/2,h-pad.b+10);ctx.textBaseline='middle'});
+ctx.setLineDash([]);ctx.strokeStyle='#0f766e';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(pad.l,Y(st.kb));ctx.lineTo(w-pad.r,Y(st.kb));ctx.stroke();
+ctx.setLineDash([9,6]);ctx.strokeStyle='#ea580c';ctx.beginPath();ctx.moveTo(pad.l,Y(kModel));ctx.lineTo(w-pad.r,Y(kModel));ctx.stroke();ctx.setLineDash([]);
+ctx.strokeStyle='#64748b';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(pad.l,pad.t);ctx.lineTo(pad.l,h-pad.b);ctx.lineTo(w-pad.r,h-pad.b);ctx.stroke();
+ctx.fillStyle='#1e293b';ctx.font='bold 17px Nunito,system-ui';ctx.textAlign='center';ctx.textBaseline='top';ctx.fillText(L==='en'?'Measurement number':L==='ru'?'Номер измерения':'Өлшеу нөмірі',pad.l+pw/2,h-30);
+ctx.save();ctx.translate(22,pad.t+ph/2);ctx.rotate(-Math.PI/2);ctx.textBaseline='middle';ctx.fillText('k ('+u.Nm+')',0,0);ctx.restore()}
+/* ================= Error + comparison ================= */
+function updateErrors(){const st=stats(),u=U();
+if(!st||st.n<2){$('errK').textContent=st?fmt(st.kb,1)+' '+u.Nm:'—';$('errDk').textContent='—';$('errEps').textContent='—';$('errResult').textContent=tr('errNone');return}
+$('errK').textContent=fmt(st.kb,1)+' '+u.Nm;$('errDk').textContent=fmt(st.dk,2)+' '+u.Nm;$('errEps').textContent=fmt(st.eps,1)+' %';
+$('errResult').textContent=`${tr('errRes')}: k = (${fmt(st.kb,1)} ± ${fmt(st.dk,1)}) ${u.Nm}, ε = ${fmt(st.eps,1)} %`}
+function updateCompare(){const F=+$('forceSlider').value,k=+$('kSlider').value,x=F/k,u=U(),st=stats();
+document.querySelectorAll('.uN').forEach(e=>e.textContent=u.N);document.querySelectorAll('.um').forEach(e=>e.textContent=u.m);document.querySelectorAll('.uNm').forEach(e=>e.textContent=u.Nm);
+$('compareModel').textContent=`F = ${fmt(F,1)} ${u.N}, k = ${fmt(k,0)} ${u.Nm} → Δx = ${fmt(x,3)} ${u.m}`;
+$('cmpFModel').textContent=fmt(F,2);$('cmpKModel').textContent=fmt(k,1);$('cmpXModel').textContent=fmt(x,3);
+['F','X','K'].forEach(s=>{$('cmp'+s+'Abs').textContent='—';$('cmp'+s+'Rel').textContent='—'});
+if(!st){$('measuredSummary').textContent=tr('noData');$('cmpFMeasured').textContent='—';$('cmpXMeasured').textContent='—';$('cmpKMeasured').textContent='—';updateErrors();return}
+$('measuredSummary').textContent=`${tr('meanK')}: ${fmt(st.kb,1)} ${u.Nm} (${st.n} ${tr('meas')})`;
+const xm=st.F/k;$('cmpXModel').textContent=fmt(xm,3);
+$('cmpFMeasured').textContent=fmt(st.F,2);$('cmpXMeasured').textContent=fmt(st.x,3);$('cmpKMeasured').textContent=fmt(st.kb,1);
+const dx=Math.abs(st.x-xm),dK=Math.abs(st.kb-k);
+$('cmpXAbs').textContent=fmt(dx,3);$('cmpXRel').textContent=fmt(dx/xm*100,1);$('cmpKAbs').textContent=fmt(dK,1);$('cmpKRel').textContent=fmt(dK/k*100,1);
+updateErrors()}
+function refreshAll(){calculateTable();drawGraphs();updateCompare()}
+
+/* ================= Language ================= */
+function applyLanguage(){const L=lang();document.documentElement.lang=L;
+document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.dataset.i18n,v=(T[L]&&T[L][k])||T.kk[k];if(v!==undefined)el.innerHTML=v});
+$('studentName').placeholder=L==='ru'?'ФИО':L==='en'?'Full name':'Аты-жөні';$('studentClass').placeholder=L==='en'?'7A':'7 «А»';
+$('conclusion').placeholder=L==='ru'?'Опишите связь силы и удлинения...':L==='en'?'Describe the relationship between force and extension...':'Күш пен ұзару арасындағы байланысты сипаттаңыз...';
+$('danaInput').placeholder=tr('danaPlaceholder');
+$('danaChips').innerHTML='';['chip1','chip2','chip3','chip4'].forEach(k=>{const b=document.createElement('button');b.type='button';b.className='secondary';b.textContent=tr(k);b.addEventListener('click',()=>danaAsk(b.textContent));$('danaChips').appendChild(b)});
+$('buildMsg').textContent=tr(msgKey);
+const first=$('danaMsgs').querySelector('.msg.bot[data-hello]');if(first)first.textContent=tr('danaHello');
+updateModel();refreshAll()}
+
+/* ================= Dana: assistant ================= */
+const KB=[
+{re:/қателік|погрешн|error|абсолют|салыстырмалы|относит|absolute|relative/i,kk:'Абсолюттік қателік Δk — әр өлшеудегі k мәнінің орташа k̄ мәнінен айырмасы (таңбасыз). Олардың орташасын аламыз. Салыстырмалы қателік ε = Δk / k̄ · 100 % — қателік мәннің қанша пайызын құрайтынын көрсетеді. Мұның бәрін 9-бөлімде автоматты көресің.',ru:'Абсолютная погрешность Δk — разность между k каждого измерения и средним k̄ (без знака). Берём среднее этих значений. Относительная погрешность ε = Δk / k̄ · 100 % показывает, какую долю значения она составляет. Всё это считается автоматически в разделе 9.',en:'The absolute error Δk is the difference (without sign) between each measurement’s k and the mean k̄; we take the average of these. The relative error ε = Δk / k̄ · 100 % shows what percentage of the value the error is. Section 9 calculates it for you.'},
+{re:/дельта|delta|Δ|ұзару|удлинен|extension|\bx\b/i,kk:'Δx — серіппенің ұзаруы: жүк ілінгендегі ұзындық l-ден бастапқы ұзындық l₀-ді алып тастаймыз, Δx = l − l₀. «Δ» белгісі «өзгеріс» дегенді білдіреді, яғни серіппе қаншаға өзгерді.',ru:'Δx — удлинение пружины: из длины с грузом l вычитаем начальную длину l₀, Δx = l − l₀. Знак «Δ» означает «изменение»: на сколько изменилась длина пружины.',en:'Δx is the extension of the spring: subtract the initial length l₀ from the length with the load l, Δx = l − l₀. The symbol “Δ” means “change”: how much the length changed.'},
+{re:/жина|собра|build|assemble|қондырғы|установк|штатив|stand|модел|model|сүйре|перетащ|drag/i,kk:'Қондырғыны ретімен жина: алдымен штатив, содан кейін серіппе, жүк ілгіш, жүктер. Сызғышты да ұмытпа. Бөлшекті басуға немесе сахнаға сүйреп апаруға болады. Бәрі жиналғанда күш пен қатаңдықты өзгерте аласың.',ru:'Собирайте по порядку: сначала штатив, потом пружина, держатель, грузы. Не забудьте линейку. Деталь можно нажать или перетащить на сцену. Когда всё собрано, можно менять силу и жёсткость.',en:'Build in order: stand first, then spring, hanger and masses. Do not forget the ruler. You can tap a part or drag it onto the stage. Once everything is in place you can change force and stiffness.'},
+{re:/график|graph|көлбеу|наклон|slope|түзу|прям|line/i,kk:'F(Δx) графигі — координат басынан өтетін түзу сызық. Түзудің кез келген нүктесін алып, k = F / Δx есептейміз: бұл серіппенің қатаңдық коэффициенті. Түзу тіктеу болса, серіппе қатты.',ru:'График F(Δx) — прямая, проходящая через начало координат. Берём любую точку на прямой и считаем k = F / Δx: это коэффициент жёсткости пружины. Чем круче прямая, тем жёстче пружина.',en:'The F(Δx) graph is a straight line through the origin. Pick any point on the line and calculate k = F / Δx: that is the spring stiffness constant. A steeper line means a stiffer spring.'},
+{re:/қатаңд|жёстк|жестк|stiff|коэфф|coeff|\bk\b/i,kk:'Серіппенің қатаңдық коэффициенті k — серіппені 1 метрге созу үшін қанша ньютон күш керек екенін көрсетеді (Н/м). k үлкен болса, серіппе қатты, оны созу қиын. Табу үшін k = F / Δx формуласын қолданамыз.',ru:'Коэффициент жёсткости пружины k показывает, сколько ньютонов нужно, чтобы растянуть пружину на 1 метр (Н/м). Чем больше k, тем жёстче пружина. Находим по формуле k = F / Δx.',en:'The spring stiffness constant k shows how many newtons are needed to stretch the spring by 1 metre (N/m). A bigger k means a stiffer spring. We find it with k = F / Δx.'},
+{re:/гук|hooke|закон|law/i,kk:'Гук заңы: серпімділік күші серіппенің ұзаруына тура пропорционал, F = k·Δx. Күш екі есе артса, ұзару да екі есе артады.',ru:'Закон Гука: сила упругости прямо пропорциональна удлинению пружины, F = k·Δx. Сила вдвое больше — удлинение вдвое больше.',en:'Hooke’s law: the elastic force is directly proportional to the extension, F = k·Δx. Double the force and the extension doubles.'},
+{re:/масса|mass|F\s*=|mg|салмақ|вес|weigh|күш|сил[аыу]|force|g\b/i,kk:'Жүктің күшін F = mg формуласымен табамыз, мұндағы m — масса (кг), g ≈ 9,8 Н/кг. Мысалы, 0,1 кг жүк шамамен 0,98 Н күш береді.',ru:'Силу груза находим по формуле F = mg, где m — масса (кг), g ≈ 9,8 Н/кг. Например, груз 0,1 кг создаёт силу около 0,98 Н.',en:'We find the force of the load with F = mg, where m is mass (kg) and g ≈ 9.8 N/kg. For example, a 0.1 kg mass gives about 0.98 N.'},
+{re:/шек|предел|limit|қалпына|упруг|elastic|серпім/i,kk:'Серіппені тым қатты созбасаң, жүкті алғанда ол бұрынғы ұзындығына қайтады. Гук заңы дәл осы кезде дұрыс. Тым қатты созсаң, серіппе қалпына келмей қалады, ал заң орындалмайды.',ru:'Если не растягивать пружину слишком сильно, после снятия груза она возвращается к прежней длине. Закон Гука верен именно тогда. Если растянуть слишком сильно, пружина не восстановится и закон перестанет работать.',en:'If you do not stretch the spring too far, it goes back to its old length when the load is removed. Hooke’s law works exactly then. Stretch too far and the spring will not recover and the law stops working.'},
+{re:/қауіпсіз|безопас|safe|safety/i,kk:'Серіппені штативке мықтап бекіт, жүкті абайлап іл, рұқсат етілгеннен артық жүк салма және жүкті бетіңе бағыттама. Толық тізім 5-бөлімде.',ru:'Надёжно закрепите пружину на штативе, вешайте грузы осторожно, не превышайте допустимую нагрузку и не направляйте грузы в лицо. Полный список в разделе 5.',en:'Fix the spring firmly to the stand, hang masses carefully, do not exceed the rated load and never point loads at your face. The full list is in section 5.'},
+{re:/сызғыш|линейк|ruler|өлше|измер|measure|l0|l₀/i,kk:'Алдымен жүксіз серіппенің ұзындығын l₀ өлше. Сосын жүк іліп, жаңа ұзындықты l өлше. Сызғышты көзіңмен тік қарап оқы, сонда қателік аз болады. Содан Δx = l − l₀.',ru:'Сначала измерьте длину пружины без груза l₀. Потом повесьте груз и измерьте новую длину l. Смотрите на линейку строго прямо, тогда ошибка меньше. Затем Δx = l − l₀.',en:'First measure the spring length without a load, l₀. Then hang a mass and measure the new length l. Look at the ruler straight on to keep the error small. Then Δx = l − l₀.'}
+];
+const DEFAULT={kk:'Мен физика көмекшісімін. Мына тақырыптардан сұра: Гук заңы, Δx, қатаңдық коэффициенті k, график, қателік, қауіпсіздік, модельді жинау.',ru:'Я помощница по физике. Спрашивайте про закон Гука, Δx, коэффициент жёсткости k, график, погрешность, безопасность, сборку модели.',en:'I am a physics helper. Ask me about Hooke’s law, Δx, the stiffness constant k, the graph, error, safety or building the model.'};
+function localAnswer(q){const e=KB.find(x=>x.re.test(q));return e?e[lang()]:DEFAULT[lang()]}
+const hist=[];
+function addMsg(text,who,hello){const d=document.createElement('div');d.className='msg '+who;d.textContent=text;if(hello)d.dataset.hello='1';$('danaMsgs').appendChild(d);$('danaMsgs').scrollTop=1e9;return d}
+async function aiAnswer(q){
+  try{if(window.claude&&typeof window.claude.use==='function'){const s=await window.claude.use('sample');if(s){
+    const st=stats(),L={kk:'Kazakh',ru:'Russian',en:'English'}[lang()];
+    const ctx=`Model: F=${$('forceSlider').value} N, k=${$('kSlider').value} N/m, assembled=${ready()}. Table: ${st?`${st.n} measurements, mean k=${st.kb.toFixed(1)} N/m`:'no data'}.`;
+    const prompt=`You are Dana, a friendly owl who helps a 7th-grade student with a physics lab on Hooke's law (spring extension Δx, F = kΔx, stiffness k, graph F(Δx), absolute and relative error). Answer in ${L}, in at most 4 short sentences, in simple words. Guide the student with hints and explanations; do not just give the final numeric results of their lab table. If the question is not about this lab or physics, kindly steer back. Lab context: ${ctx}\nConversation so far:\n${hist.slice(-6).map(h=>h.r+': '+h.t).join('\n')}\nStudent: ${q}`;
+    const r=await s(prompt,{cache:false});if(r&&r.text)return r.text}}}catch(e){}
+  return localAnswer(q)}
+async function danaAsk(q){q=(q||'').trim();if(!q)return;addMsg(q,'me');hist.push({r:'Student',t:q});const th=addMsg(tr('danaThinking'),'bot');const a=await aiAnswer(q);th.textContent=a;hist.push({r:'Dana',t:a});$('danaMsgs').scrollTop=1e9}
+$('danaForm').addEventListener('submit',e=>{e.preventDefault();const v=$('danaInput').value;$('danaInput').value='';danaAsk(v)});
+$('danaBtn').addEventListener('click',()=>{const p=$('danaPanel');p.hidden=!p.hidden;$('danaBtn').querySelector('.bubble').style.display=p.hidden?'':'none';if(!p.hidden)$('danaInput').focus()});
+$('danaClose').addEventListener('click',()=>{$('danaPanel').hidden=true;$('danaBtn').querySelector('.bubble').style.display=''});
+addMsg(T.kk.danaHello,'bot',true);
+
+/* ================= Wiring ================= */
+$('forceSlider').addEventListener('input',updateModel);$('kSlider').addEventListener('input',updateModel);
+$('addRow').addEventListener('click',()=>{addRow();refreshAll()});
+$('fillExample').addEventListener('click',()=>{$('tableBody').innerHTML='';rowCount=0;[[.05,.1,.149],[.1,.1,.198],[.15,.1,.248],[.2,.1,.295],[.25,.1,.346]].forEach(a=>addRow({m:a[0],l0:a[1],l:a[2]}));refreshAll()});
+$('clearTable').addEventListener('click',()=>{$('tableBody').innerHTML='';rowCount=0;addRow();refreshAll()});
+$('language').addEventListener('change',applyLanguage);
+$('themeChoice').addEventListener('change',e=>{document.body.classList.remove('contrast','warm','cool');if(e.target.value!=='default')document.body.classList.add(e.target.value)});
+$('largeText').addEventListener('click',()=>document.body.classList.toggle('large-text'));
+const outside=el=>el.closest('#dana');
+$('saveWork').addEventListener('click',()=>{const L=lang();if(!$('studentName').value.trim()||!$('studentClass').value.trim()){$('saveStatus').textContent=L==='ru'?'Заполните ФИО и класс перед сохранением.':L==='en'?'Enter student name and class before saving.':'Сақтау үшін оқушының аты-жөні мен сыныбын толтырыңыз.';return}
+document.body.classList.add('work-locked');document.querySelectorAll('input,textarea').forEach(el=>{if(!outside(el))el.disabled=true});document.querySelectorAll('button').forEach(el=>{if(!outside(el)&&!['startOver','largeText'].includes(el.id))el.disabled=true});
+$('saveStatus').textContent=L==='ru'?'Работа сохранена и заблокирована.':L==='en'?'Work saved and locked.':'Жұмыс сақталды және бекітілді.'});
+$('startOver').addEventListener('click',()=>{const L=lang();if(!confirm(L==='ru'?'Очистить работу и начать заново?':L==='en'?'Clear the work and start over?':'Жұмысты тазалап, қайта бастайсыз ба?'))return;
+document.body.classList.remove('work-locked');document.querySelectorAll('input,textarea,button').forEach(el=>el.disabled=false);['studentName','studentClass','conclusion'].forEach(i=>$(i).value='');$('saveStatus').textContent='';$('recStatus').textContent='';
+$('tableBody').innerHTML='';rowCount=0;for(let i=0;i<5;i++)addRow();$('forceSlider').value=2;$('kSlider').value=20;for(const p in asm)asm[p]=0;refreshBuild();say('msgStart');refreshAll()});
+
+for(let i=0;i<5;i++)addRow();
+refreshBuild();applyLanguage();say('msgStart');
+</script></body></html>
